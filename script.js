@@ -106,7 +106,6 @@ const initScreens = () => {
   const backButtonIds = [
     'back-breathing-setup',
     'back-meditation-setup',
-    'back-meditation-session',
   ];
 
   backButtonIds.forEach((id) => {
@@ -118,6 +117,11 @@ const initScreens = () => {
   const btnEndBreathing = $('#back-breathing-session');
   if (btnEndBreathing) {
     btnEndBreathing.addEventListener('click', endBreathingSession);
+  }
+
+  const btnEndMeditation = $('#back-meditation-session');
+  if (btnEndMeditation) {
+    btnEndMeditation.addEventListener('click', endMeditationSession);
   }
 
   /* ---- Completion screen actions ---- */
@@ -170,8 +174,20 @@ const initScreens = () => {
   const btnPauseMeditation = $('#btn-pause-meditation');
   if (btnPauseMeditation) {
     btnPauseMeditation.addEventListener('click', () => {
-      /* TODO: pause meditation timer */
-      console.log('%c[Session] Pause meditation — placeholder', 'color: #C9A84C; font-style: italic;');
+      if (!meditationSession.isActive) return;
+
+      if (meditationSession.isPaused) {
+        meditationSession.isPaused = false;
+        btnPauseMeditation.textContent = 'Pause';
+        meditationSession.intervalId = setInterval(tickMeditation, 1000);
+      } else {
+        meditationSession.isPaused = true;
+        btnPauseMeditation.textContent = 'Resume';
+        if (meditationSession.intervalId) {
+          clearInterval(meditationSession.intervalId);
+          meditationSession.intervalId = null;
+        }
+      }
     });
   }
 };
@@ -614,6 +630,99 @@ const meditationSession = {
   duration: 0,
   focus: '',
   isActive: false,
+  isPaused: false,
+  timeLeft: 0,
+  intervalId: null,
+};
+
+/**
+ * Stops the meditation session countdown timer and resets state.
+ */
+const stopMeditationTimer = () => {
+  if (meditationSession.intervalId) {
+    clearInterval(meditationSession.intervalId);
+    meditationSession.intervalId = null;
+  }
+  meditationSession.isActive = false;
+  meditationSession.isPaused = false;
+
+  const pauseBtn = $('#btn-pause-meditation');
+  if (pauseBtn) {
+    pauseBtn.textContent = 'Pause';
+  }
+
+  const progressEl = $('#meditation-progress');
+  if (progressEl) {
+    progressEl.style.width = '0%';
+    progressEl.setAttribute('aria-valuenow', '0');
+  }
+};
+
+/**
+ * End the meditation session and return home.
+ */
+const endMeditationSession = () => {
+  stopMeditationTimer();
+  goHome();
+};
+
+/**
+ * Complete the meditation session and transition to Completion screen.
+ */
+const completeMeditationSession = () => {
+  const { duration } = meditationSession;
+  stopMeditationTimer();
+
+  const statType = $('#stat-type');
+  const statDuration = $('#stat-duration');
+  const statRounds = $('#stat-rounds');
+
+  if (statType) statType.textContent = 'Meditation';
+  if (statDuration) statDuration.textContent = `${duration} min`;
+  if (statRounds) statRounds.textContent = '–';
+
+  showScreen(SCREENS.COMPLETION);
+};
+
+/**
+ * Updates the meditation time display and progress bar.
+ */
+const updateMeditationUI = () => {
+  const timeLeftEl = $('#meditation-time-left');
+  const progressEl = $('#meditation-progress');
+
+  const { timeLeft, duration } = meditationSession;
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+  if (timeLeftEl) {
+    timeLeftEl.textContent = formattedTime;
+  }
+
+  if (progressEl) {
+    const totalSeconds = duration * 60;
+    const progressPercent = ((totalSeconds - timeLeft) / totalSeconds) * 100;
+    progressEl.style.width = `${progressPercent}%`;
+    progressEl.setAttribute('aria-valuenow', Math.round(progressPercent));
+  }
+};
+
+/**
+ * Timer tick function called every second for meditation.
+ */
+const tickMeditation = () => {
+  if (meditationSession.isPaused) return;
+
+  meditationSession.timeLeft--;
+
+  if (meditationSession.timeLeft <= 0) {
+    completeMeditationSession();
+    return;
+  }
+
+  updateMeditationUI();
 };
 
 /**
@@ -679,6 +788,8 @@ const startMeditationSession = () => {
   meditationSession.duration = duration;
   meditationSession.focus = focus;
   meditationSession.isActive = true;
+  meditationSession.isPaused = false;
+  meditationSession.timeLeft = duration * 60;
 
   // Update session screen label (e.g. "Calm & Relax (15m)")
   const labelEl = $('#meditation-session-label');
@@ -689,11 +800,26 @@ const startMeditationSession = () => {
     labelEl.textContent = `${focusLabel} (${duration}m)`;
   }
 
-  // Update session screen time display (e.g. "15:00")
-  const timeLeftEl = $('#meditation-time-left');
-  if (timeLeftEl) {
-    timeLeftEl.textContent = `${duration}:00`;
+  // Update guidance text
+  const guidanceEl = $('#meditation-guidance');
+  if (guidanceEl) {
+    guidanceEl.textContent = 'Stay Present';
   }
+
+  // Update session screen time display (e.g. "05:00")
+  updateMeditationUI();
+
+  // Reset Pause button text to "Pause" just in case
+  const pauseBtn = $('#btn-pause-meditation');
+  if (pauseBtn) {
+    pauseBtn.textContent = 'Pause';
+  }
+
+  // Clear existing timer if any
+  if (meditationSession.intervalId) {
+    clearInterval(meditationSession.intervalId);
+  }
+  meditationSession.intervalId = setInterval(tickMeditation, 1000);
 
   console.log(
     '%c[Meditation Session] State locked in \u2192',
