@@ -130,12 +130,11 @@ const initScreens = () => {
     });
   }
 
-  /* ---- Setup → Session proceed buttons (placeholders) ---- */
+  /* ---- Setup → Session proceed buttons ---- */
   const btnBeginBreathing = $('#btn-begin-breathing');
   if (btnBeginBreathing) {
-    btnBeginBreathing.addEventListener('click', () => {
-      showScreen(SCREENS.BREATHING_SESSION);
-    });
+    /* startBreathingSession() is defined in module 7 below */
+    btnBeginBreathing.addEventListener('click', startBreathingSession);
   }
 
   const btnBeginMeditation = $('#btn-begin-meditation');
@@ -394,7 +393,80 @@ const initBreathingSetup = () => {
 };
 
 /* ============================================================
-   7. INIT — run everything once DOM is ready
+   7. BREATHING SESSION STATE
+   Holds the timing values copied from the Setup screen at the
+   moment Begin is pressed. Read by the Session screen and by
+   future animation logic.
+   ============================================================ */
+
+/**
+ * Active Breathing Session state.
+ * Populated by startBreathingSession() — never mutated directly.
+ *
+ * @property {object}  timings         — locked-in timing values (seconds)
+ * @property {number}  timings.breath  — inhale duration
+ * @property {number}  timings.hold    — hold duration
+ * @property {number}  timings.release — exhale duration
+ * @property {boolean} isActive        — true once the session timer is running
+ */
+const breathingSession = {
+  timings: {
+    breath:  0,
+    hold:    0,
+    release: 0,
+  },
+  isActive: false,
+};
+
+/**
+ * Called when the user presses "Begin Session" on the Setup screen.
+ *
+ * Steps:
+ *  1. Read the current values from breathingSetup.timings.
+ *  2. Store them in breathingSession.timings (session state).
+ *  3. Push the values into the Session screen's display elements.
+ *  4. Navigate to the Breathing Session screen.
+ */
+const startBreathingSession = () => {
+  /* 1. Read values from setup state */
+  const { breath, hold, release } = breathingSetup.timings;
+
+  /* 2. Store in session state */
+  breathingSession.timings.breath  = breath;
+  breathingSession.timings.hold    = hold;
+  breathingSession.timings.release = release;
+  breathingSession.isActive        = false; /* animation not started yet */
+
+  /* 3. Update Session screen display elements */
+  const labelEl = $('#breathing-session-label');  /* nav step span */
+  const phaseEl = $('#breathing-phase');           /* phase text below circle */
+  const countEl = $('#breathing-count');           /* large count inside circle */
+
+  if (labelEl) {
+    /* Show the locked-in pattern in the nav bar, e.g. "4s · 7s · 8s" */
+    labelEl.textContent = `${breath}s \u00b7 ${hold}s \u00b7 ${release}s`;
+  }
+  if (phaseEl) {
+    /* Surface the phase order until animation is wired up */
+    phaseEl.textContent = 'Inhale \u00b7 Hold \u00b7 Exhale';
+  }
+  if (countEl) {
+    /* Reset count display */
+    countEl.textContent = '\u2013';
+  }
+
+  console.log(
+    '%c[Breathing Session] State locked in \u2192',
+    'color: #C9A84C; font-style: italic;',
+    { ...breathingSession.timings }
+  );
+
+  /* 4. Navigate to the Session screen */
+  showScreen(SCREENS.BREATHING_SESSION);
+};
+
+/* ============================================================
+   8. INIT — run everything once DOM is ready
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   initScreens();
