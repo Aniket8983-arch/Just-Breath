@@ -5,329 +5,167 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="JustBreath – a calming meditation and breathing exercise app to help you relax, focus, and breathe."
+      content="Just Breath – a calming meditation and breathing app. Your mind deserves rest."
     />
-    <title>JustBreath – Breathe. Relax. Recharge.</title>
+    <title>Just Breath – Your mind deserves rest.</title>
 
-    <!-- Favicon placeholder (replace with your own) -->
     <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Cormorant Garamond (display) + Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Main stylesheet -->
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
 
-    <!-- ===== HEADER / NAV ===== -->
-    <header class="site-header" id="site-header">
-      <nav class="nav" aria-label="Main navigation">
-        <a class="nav__logo" href="#hero">
-          <!-- Inline SVG leaf / breath icon -->
-          <svg
-            class="nav__logo-icon"
-            viewBox="0 0 32 32"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle cx="16" cy="16" r="14" fill="url(#logoGrad)" />
-            <path
-              d="M16 8 C10 12 10 20 16 24 C22 20 22 12 16 8Z"
-              fill="white"
-              opacity="0.85"
-            />
-            <defs>
-              <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#6C63FF" />
-                <stop offset="1" stop-color="#48C9B0" />
-              </linearGradient>
-            </defs>
-          </svg>
-          JustBreath
-        </a>
+    <!-- =============================================
+         FLOATING SOUND BUTTON  (top-right)
+         ============================================= -->
+    <button
+      class="sound-fab"
+      id="sound-fab"
+      aria-label="Toggle ambient sound"
+      aria-pressed="false"
+      title="Ambient Sound"
+    >
+      <!-- Sound-on icon (default) -->
+      <svg class="sound-fab__icon sound-fab__icon--on" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M11 5L6 9H2v6h4l5 4V5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <!-- Sound-off icon (muted state) -->
+      <svg class="sound-fab__icon sound-fab__icon--off" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M11 5L6 9H2v6h4l5 4V5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <line x1="23" y1="9" x2="17" y2="15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="17" y1="9" x2="23" y2="15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <!-- Ripple element -->
+      <span class="sound-fab__ripple" aria-hidden="true"></span>
+    </button>
 
-        <ul class="nav__links" id="nav-links">
-          <li><a class="nav__link" href="#exercises">Exercises</a></li>
-          <li><a class="nav__link" href="#timer">Timer</a></li>
-          <li><a class="nav__link" href="#sounds">Sounds</a></li>
-        </ul>
+    <!-- =============================================
+         HOME SCREEN
+         ============================================= -->
+    <main class="home" id="home">
 
-        <!-- Hamburger for mobile -->
-        <button
-          class="nav__hamburger"
-          id="nav-hamburger"
-          aria-label="Toggle navigation"
-          aria-expanded="false"
-        >
-          <span></span><span></span><span></span>
-        </button>
-      </nav>
-    </header>
+      <!-- Decorative background layers -->
+      <div class="home__bg" aria-hidden="true">
+        <div class="bg-orb bg-orb--1"></div>
+        <div class="bg-orb bg-orb--2"></div>
+        <div class="bg-orb bg-orb--3"></div>
+        <div class="bg-grid"></div>
+      </div>
 
-    <main>
+      <!-- Central content card -->
+      <div class="home__card" id="home-card">
 
-      <!-- ===== HERO SECTION ===== -->
-      <section class="hero" id="hero" aria-label="Hero">
-        <div class="hero__bg-orbs" aria-hidden="true">
-          <span class="orb orb--1"></span>
-          <span class="orb orb--2"></span>
-          <span class="orb orb--3"></span>
+        <!-- Top decorative ring + breath animation -->
+        <div class="home__visual" aria-hidden="true">
+          <div class="breath-ring breath-ring--outer"></div>
+          <div class="breath-ring breath-ring--mid"></div>
+          <div class="breath-circle" id="breath-circle">
+            <div class="breath-circle__inner">
+              <!-- Lotus / leaf SVG icon -->
+              <svg class="breath-circle__logo" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                <circle cx="40" cy="40" r="38" fill="url(#homeGrad)" opacity="0.15"/>
+                <!-- Left petal -->
+                <path d="M40 20 C25 28 22 46 40 56 C28 48 26 32 40 20Z"
+                      fill="url(#petalGrad)" opacity="0.9"/>
+                <!-- Right petal -->
+                <path d="M40 20 C55 28 58 46 40 56 C52 48 54 32 40 20Z"
+                      fill="url(#petalGrad)" opacity="0.7"/>
+                <!-- Bottom fill -->
+                <ellipse cx="40" cy="56" rx="8" ry="4" fill="url(#petalGrad)" opacity="0.5"/>
+                <defs>
+                  <linearGradient id="homeGrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#C9A84C"/>
+                    <stop offset="1" stop-color="#F5D78E"/>
+                  </linearGradient>
+                  <linearGradient id="petalGrad" x1="40" y1="20" x2="40" y2="60" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#F5D78E"/>
+                    <stop offset="1" stop-color="#C9A84C"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </div>
         </div>
 
-        <div class="container hero__content">
-          <p class="hero__eyebrow">Find your calm</p>
-          <h1 class="hero__title">
+        <!-- App title -->
+        <header class="home__header">
+          <p class="home__eyebrow">welcome</p>
+          <h1 class="home__title">
             Just<em>Breath</em>
           </h1>
-          <p class="hero__subtitle">
-            Guided breathing exercises and ambient sounds to help you relax,
-            focus, and restore inner peace — anytime, anywhere.
-          </p>
-          <div class="hero__cta-group">
-            <a class="btn btn--primary" id="hero-start-btn" href="#exercises">Start Breathing</a>
-            <a class="btn btn--ghost" href="#sounds">Ambient Sounds</a>
-          </div>
+        </header>
+
+        <!-- Divider line with ornament -->
+        <div class="home__divider" aria-hidden="true">
+          <span class="home__divider-line"></span>
+          <span class="home__divider-dot"></span>
+          <span class="home__divider-line"></span>
         </div>
 
-        <!-- Animated breath ring (hero visual) -->
-        <div class="breath-ring-hero" id="breath-ring-hero" aria-hidden="true">
-          <div class="breath-ring-hero__inner"></div>
+        <!-- Quote -->
+        <blockquote class="home__quote" id="home-quote">
+          <p>"Your mind deserves rest."</p>
+        </blockquote>
+
+        <!-- CTA Buttons -->
+        <nav class="home__actions" aria-label="Main actions">
+          <button
+            class="btn btn--primary"
+            id="btn-breathing"
+            type="button"
+          >
+            <svg class="btn__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Start Breathing
+          </button>
+
+          <button
+            class="btn btn--secondary"
+            id="btn-meditation"
+            type="button"
+          >
+            <svg class="btn__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M4 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="10" cy="6" r="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M2 17h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Start Meditation
+          </button>
+        </nav>
+
+        <!-- Bottom ambient indicator bar -->
+        <div class="home__ambient-bar" id="ambient-bar" aria-hidden="true">
+          <span class="ambient-dot" style="animation-delay: 0s"></span>
+          <span class="ambient-dot" style="animation-delay: 0.2s"></span>
+          <span class="ambient-dot" style="animation-delay: 0.4s"></span>
+          <span class="ambient-dot" style="animation-delay: 0.6s"></span>
+          <span class="ambient-dot" style="animation-delay: 0.8s"></span>
+          <span class="ambient-dot" style="animation-delay: 1s"></span>
+          <span class="ambient-dot" style="animation-delay: 1.2s"></span>
         </div>
-      </section>
 
-      <!-- ===== BREATHING EXERCISES SECTION ===== -->
-      <section class="section exercises" id="exercises" aria-label="Breathing exercises">
-        <div class="container">
-          <h2 class="section__title">Breathing Exercises</h2>
-          <p class="section__subtitle">
-            Choose a technique and follow the guided animation.
-          </p>
+      </div><!-- /.home__card -->
 
-          <!-- Exercise cards -->
-          <div class="exercise-grid" id="exercise-grid">
-
-            <article class="exercise-card" id="card-box" data-exercise="box">
-              <div class="exercise-card__icon" aria-hidden="true">🟦</div>
-              <h3 class="exercise-card__title">Box Breathing</h3>
-              <p class="exercise-card__desc">
-                Inhale · Hold · Exhale · Hold — 4 counts each.
-                Reduces stress and improves focus.
-              </p>
-              <span class="exercise-card__tag">4-4-4-4</span>
-              <button class="btn btn--card" data-exercise="box" aria-label="Start Box Breathing">
-                Start
-              </button>
-            </article>
-
-            <article class="exercise-card" id="card-478" data-exercise="478">
-              <div class="exercise-card__icon" aria-hidden="true">🌙</div>
-              <h3 class="exercise-card__title">4-7-8 Breathing</h3>
-              <p class="exercise-card__desc">
-                Inhale 4 · Hold 7 · Exhale 8. A natural tranquiliser
-                for the nervous system.
-              </p>
-              <span class="exercise-card__tag">4-7-8</span>
-              <button class="btn btn--card" data-exercise="478" aria-label="Start 4-7-8 Breathing">
-                Start
-              </button>
-            </article>
-
-            <article class="exercise-card" id="card-diaphragm" data-exercise="diaphragm">
-              <div class="exercise-card__icon" aria-hidden="true">🌊</div>
-              <h3 class="exercise-card__title">Diaphragmatic</h3>
-              <p class="exercise-card__desc">
-                Deep belly breathing that activates your body's
-                relaxation response.
-              </p>
-              <span class="exercise-card__tag">5-5</span>
-              <button class="btn btn--card" data-exercise="diaphragm" aria-label="Start Diaphragmatic Breathing">
-                Start
-              </button>
-            </article>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- ===== GUIDED BREATHING TIMER ===== -->
-      <section class="section timer-section" id="timer" aria-label="Guided breathing timer">
-        <div class="container timer-section__inner">
-
-          <div class="timer-section__info">
-            <h2 class="section__title">Guided Timer</h2>
-            <p class="section__subtitle" id="timer-exercise-name">
-              Select an exercise above to begin.
-            </p>
-
-            <!-- Phase label -->
-            <p class="timer__phase-label" id="timer-phase-label" aria-live="polite">
-              &nbsp;
-            </p>
-
-            <!-- Count display -->
-            <p class="timer__count" id="timer-count" aria-live="polite">0</p>
-
-            <!-- Controls -->
-            <div class="timer__controls">
-              <button class="btn btn--primary" id="btn-start-pause" disabled>
-                Start
-              </button>
-              <button class="btn btn--ghost" id="btn-reset" disabled>
-                Reset
-              </button>
-            </div>
-
-            <!-- Session counter -->
-            <p class="timer__sessions" id="timer-sessions">
-              Sessions completed: <strong>0</strong>
-            </p>
-          </div>
-
-          <!-- Breath animation circle -->
-          <div class="breath-circle-wrapper" aria-hidden="true">
-            <div class="breath-circle" id="breath-circle">
-              <span class="breath-circle__text" id="breath-circle-text">Breathe</span>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ===== AMBIENT SOUNDS ===== -->
-      <section class="section sounds" id="sounds" aria-label="Ambient sounds">
-        <div class="container">
-          <h2 class="section__title">Ambient Sounds</h2>
-          <p class="section__subtitle">
-            Layer calming sounds to deepen your practice.
-          </p>
-
-          <div class="sound-grid" id="sound-grid">
-
-            <div class="sound-card" id="sound-rain">
-              <span class="sound-card__emoji" aria-hidden="true">🌧️</span>
-              <p class="sound-card__name">Rain</p>
-              <button
-                class="sound-card__toggle"
-                id="btn-sound-rain"
-                aria-label="Toggle rain sounds"
-                aria-pressed="false"
-                data-sound="rain"
-              >
-                <span class="sound-card__toggle-icon">▶</span>
-              </button>
-              <input
-                class="sound-card__volume"
-                id="vol-rain"
-                type="range"
-                min="0"
-                max="1"
-                step="0.05"
-                value="0.5"
-                aria-label="Rain volume"
-              />
-            </div>
-
-            <div class="sound-card" id="sound-ocean">
-              <span class="sound-card__emoji" aria-hidden="true">🌊</span>
-              <p class="sound-card__name">Ocean</p>
-              <button
-                class="sound-card__toggle"
-                id="btn-sound-ocean"
-                aria-label="Toggle ocean sounds"
-                aria-pressed="false"
-                data-sound="ocean"
-              >
-                <span class="sound-card__toggle-icon">▶</span>
-              </button>
-              <input
-                class="sound-card__volume"
-                id="vol-ocean"
-                type="range"
-                min="0"
-                max="1"
-                step="0.05"
-                value="0.5"
-                aria-label="Ocean volume"
-              />
-            </div>
-
-            <div class="sound-card" id="sound-forest">
-              <span class="sound-card__emoji" aria-hidden="true">🌲</span>
-              <p class="sound-card__name">Forest</p>
-              <button
-                class="sound-card__toggle"
-                id="btn-sound-forest"
-                aria-label="Toggle forest sounds"
-                aria-pressed="false"
-                data-sound="forest"
-              >
-                <span class="sound-card__toggle-icon">▶</span>
-              </button>
-              <input
-                class="sound-card__volume"
-                id="vol-forest"
-                type="range"
-                min="0"
-                max="1"
-                step="0.05"
-                value="0.5"
-                aria-label="Forest volume"
-              />
-            </div>
-
-            <div class="sound-card" id="sound-bowl">
-              <span class="sound-card__emoji" aria-hidden="true">🎵</span>
-              <p class="sound-card__name">Singing Bowl</p>
-              <button
-                class="sound-card__toggle"
-                id="btn-sound-bowl"
-                aria-label="Toggle singing bowl sounds"
-                aria-pressed="false"
-                data-sound="bowl"
-              >
-                <span class="sound-card__toggle-icon">▶</span>
-              </button>
-              <input
-                class="sound-card__volume"
-                id="vol-bowl"
-                type="range"
-                min="0"
-                max="1"
-                step="0.05"
-                value="0.5"
-                aria-label="Singing bowl volume"
-              />
-            </div>
-
-          </div>
-
-          <p class="sounds__note">
-            🎧 Add audio files to <code>assets/sounds/</code> to enable playback.
-          </p>
-        </div>
-      </section>
+      <!-- Bottom tagline -->
+      <p class="home__tagline" aria-hidden="true">
+        Breathe in calm. Breathe out tension.
+      </p>
 
     </main>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="site-footer" id="site-footer">
-      <div class="container">
-        <p class="site-footer__text">
-          Made with 💙 · JustBreath &copy; <span id="footer-year"></span>
-        </p>
-        <p class="site-footer__tagline">Take a breath. You've got this.</p>
-      </div>
-    </footer>
-
-    <!-- Main script -->
     <script src="script.js"></script>
-
   </body>
 </html>

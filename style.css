@@ -1,93 +1,110 @@
 /* ============================================================
-   JustBreath — Main Stylesheet
+   Just Breath — Home Screen Stylesheet
+   Mobile-first · Dark Navy + Gold palette
+
    Structure:
-   1. CSS Custom Properties (Design Tokens)
-   2. Reset & Base
-   3. Typography
-   4. Utility Classes
-   5. Layout (Container, Section)
-   6. Buttons
-   7. Header & Navigation
-   8. Hero Section
-   9. Exercises Section
-   10. Timer Section
-   11. Sounds Section
-   12. Footer
-   13. Animations & Keyframes
-   14. Responsive (Media Queries)
+   1.  CSS Custom Properties (Design Tokens)
+   2.  Reset & Base
+   3.  Typography
+   4.  Layout — Home Screen
+   5.  Background Decorations
+   6.  Visual — Breath Circle & Rings
+   7.  Header — Title & Quote
+   8.  Buttons
+   9.  Ambient Bar
+   10. Floating Sound Button (FAB)
+   11. Animations & Keyframes
+   12. Responsive — Tablet & Desktop
    ============================================================ */
+
 
 /* ============================================================
    1. CSS CUSTOM PROPERTIES
    ============================================================ */
 :root {
-  /* Colours */
-  --color-bg:           #0b0c1a;
-  --color-surface:      #12132b;
-  --color-surface-alt:  #191a38;
-  --color-border:       rgba(255, 255, 255, 0.07);
+  /* --- Navy palette --- */
+  --navy-950:  #060812;
+  --navy-900:  #0a0d1c;
+  --navy-800:  #0f1228;
+  --navy-700:  #151834;
+  --navy-600:  #1e2245;
 
-  --color-primary:      #6c63ff;
-  --color-primary-soft: rgba(108, 99, 255, 0.18);
-  --color-accent:       #48c9b0;
-  --color-accent-soft:  rgba(72, 201, 176, 0.15);
+  /* --- Gold palette --- */
+  --gold-300:  #F5D78E;
+  --gold-400:  #E8C56A;
+  --gold-500:  #C9A84C;
+  --gold-600:  #A8863A;
+  --gold-glow: rgba(201, 168, 76, 0.35);
 
-  --color-text:         #e8eaf6;
-  --color-text-muted:   #8890b5;
-  --color-white:        #ffffff;
+  /* --- Neutral --- */
+  --white:          #ffffff;
+  --text-primary:   #EDE8D8;
+  --text-secondary: #9A96B0;
+  --text-muted:     #5C597A;
 
-  /* Gradients */
-  --grad-primary:  linear-gradient(135deg, #6c63ff 0%, #48c9b0 100%);
-  --grad-hero:     radial-gradient(ellipse 80% 60% at 50% -10%, rgba(108,99,255,0.35) 0%, transparent 70%);
-  --grad-card:     linear-gradient(145deg, #191a38 0%, #12132b 100%);
+  /* --- Borders & surfaces --- */
+  --border-subtle:  rgba(201, 168, 76, 0.12);
+  --border-gold:    rgba(201, 168, 76, 0.35);
+  --surface-glass:  rgba(255, 255, 255, 0.035);
+  --surface-card:   rgba(15, 18, 40, 0.85);
 
-  /* Typography */
+  /* --- Gradients --- */
+  --grad-gold:        linear-gradient(135deg, #F5D78E 0%, #C9A84C 60%, #A8863A 100%);
+  --grad-gold-soft:   linear-gradient(135deg, rgba(245,215,142,0.15) 0%, rgba(201,168,76,0.08) 100%);
+  --grad-navy:        linear-gradient(180deg, #060812 0%, #0f1228 50%, #0a0d1c 100%);
+  --grad-btn-primary: linear-gradient(135deg, #E8C56A 0%, #C9A84C 100%);
+  --grad-btn-hover:   linear-gradient(135deg, #F5D78E 0%, #D9AE54 100%);
+
+  /* --- Typography --- */
   --font-body:    'Inter', system-ui, sans-serif;
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
 
-  --text-xs:  0.75rem;   /* 12px */
-  --text-sm:  0.875rem;  /* 14px */
-  --text-md:  1rem;      /* 16px */
-  --text-lg:  1.125rem;  /* 18px */
-  --text-xl:  1.25rem;   /* 20px */
-  --text-2xl: 1.5rem;    /* 24px */
-  --text-3xl: 2rem;      /* 32px */
-  --text-4xl: 2.75rem;   /* 44px */
-  --text-5xl: 3.75rem;   /* 60px */
+  /* Type scale */
+  --text-xs:  0.6875rem;  /* 11px */
+  --text-sm:  0.8125rem;  /* 13px */
+  --text-md:  1rem;       /* 16px */
+  --text-lg:  1.125rem;   /* 18px */
+  --text-xl:  1.375rem;   /* 22px */
+  --text-2xl: 1.75rem;    /* 28px */
+  --text-3xl: 2.25rem;    /* 36px */
+  --text-4xl: 3rem;       /* 48px */
+  --text-5xl: 4rem;       /* 64px */
 
-  /* Spacing */
+  /* --- Spacing --- */
   --sp-1:  0.25rem;
   --sp-2:  0.5rem;
   --sp-3:  0.75rem;
   --sp-4:  1rem;
+  --sp-5:  1.25rem;
   --sp-6:  1.5rem;
   --sp-8:  2rem;
+  --sp-10: 2.5rem;
   --sp-12: 3rem;
   --sp-16: 4rem;
-  --sp-24: 6rem;
 
-  /* Borders */
-  --radius-sm:  6px;
-  --radius-md:  12px;
-  --radius-lg:  20px;
-  --radius-xl:  32px;
+  /* --- Radii --- */
+  --radius-sm:   8px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --radius-xl:   36px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md:  0 4px 20px rgba(0,0,0,0.5);
-  --shadow-lg:  0 8px 40px rgba(0,0,0,0.6);
-  --shadow-glow-primary: 0 0 40px rgba(108, 99, 255, 0.4);
-  --shadow-glow-accent:  0 0 40px rgba(72, 201, 176, 0.3);
+  /* --- Shadows --- */
+  --shadow-card:    0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px var(--border-subtle);
+  --shadow-btn:     0 6px 24px rgba(201, 168, 76, 0.4);
+  --shadow-btn-hov: 0 10px 40px rgba(201, 168, 76, 0.6);
+  --shadow-glow:    0 0 60px rgba(201, 168, 76, 0.25);
+  --shadow-fab:     0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px var(--border-gold);
 
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 300ms ease;
-  --transition-slow: 600ms ease;
+  /* --- Transitions --- */
+  --t-fast: 140ms ease;
+  --t-base: 280ms ease;
+  --t-slow: 560ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Header */
-  --header-h: 68px;
+  /* --- FAB size --- */
+  --fab-size: 52px;
 }
+
 
 /* ============================================================
    2. RESET & BASE
@@ -101,34 +118,27 @@
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--navy-900);
+  background-image: var(--grad-navy);
+  color: var(--text-primary);
   font-family: var(--font-body);
   font-weight: 400;
   line-height: 1.6;
   min-height: 100dvh;
   overflow-x: hidden;
+  /* Prevent pull-to-refresh janking the layout */
+  overscroll-behavior: none;
 }
 
-img,
-svg {
+img, svg {
   display: block;
   max-width: 100%;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-ul {
-  list-style: none;
 }
 
 button {
@@ -136,801 +146,638 @@ button {
   border: none;
   background: none;
   font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
-input[type="range"] {
-  accent-color: var(--color-primary);
+blockquote, p, h1, h2, h3 {
+  margin: 0;
 }
+
 
 /* ============================================================
    3. TYPOGRAPHY
    ============================================================ */
-h1, h2, h3, h4 {
-  line-height: 1.2;
-  font-weight: 600;
-}
-
-em {
+h1 {
   font-family: var(--font-display);
-  font-style: italic;
-  color: var(--color-accent);
-}
-
-code {
-  font-family: 'Courier New', monospace;
-  font-size: var(--text-sm);
-  background: var(--color-surface-alt);
-  padding: 2px var(--sp-2);
-  border-radius: var(--radius-sm);
-  color: var(--color-accent);
-}
-
-/* ============================================================
-   4. UTILITY CLASSES
-   ============================================================ */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
-/* ============================================================
-   5. LAYOUT
-   ============================================================ */
-.container {
-  width: min(1120px, 100% - var(--sp-8));
-  margin-inline: auto;
-}
-
-.section {
-  padding-block: var(--sp-24);
-}
-
-.section__title {
-  font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
-  background: var(--grad-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: var(--sp-3);
-}
-
-.section__subtitle {
-  color: var(--color-text-muted);
-  font-size: var(--text-lg);
-  margin-bottom: var(--sp-12);
-  max-width: 55ch;
-}
-
-/* ============================================================
-   6. BUTTONS
-   ============================================================ */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-2);
-  padding: var(--sp-3) var(--sp-6);
-  border-radius: var(--radius-full);
-  font-size: var(--text-md);
-  font-weight: 500;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
-  white-space: nowrap;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-}
-
-.btn:active {
-  transform: translateY(0);
-}
-
-/* Primary button */
-.btn--primary {
-  background: var(--grad-primary);
-  color: var(--color-white);
-  box-shadow: 0 4px 18px rgba(108, 99, 255, 0.4);
-}
-
-.btn--primary:hover {
-  box-shadow: 0 6px 28px rgba(108, 99, 255, 0.6);
-}
-
-.btn--primary:disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-/* Ghost button */
-.btn--ghost {
-  border: 1.5px solid rgba(255,255,255,0.15);
-  color: var(--color-text);
-  backdrop-filter: blur(4px);
-}
-
-.btn--ghost:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  background: var(--color-primary-soft);
-}
-
-.btn--ghost:disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-/* Card button */
-.btn--card {
-  margin-top: var(--sp-4);
-  width: 100%;
-  padding: var(--sp-3) var(--sp-4);
-  border-radius: var(--radius-md);
-  border: 1.5px solid var(--color-primary);
-  color: var(--color-primary);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  transition: background var(--transition-base), color var(--transition-base), transform var(--transition-fast);
-}
-
-.btn--card:hover {
-  background: var(--color-primary);
-  color: var(--color-white);
-  transform: translateY(-2px);
-}
-
-.btn--card.is-active {
-  background: var(--grad-primary);
-  color: var(--color-white);
-  border-color: transparent;
-}
-
-/* ============================================================
-   7. HEADER & NAVIGATION
-   ============================================================ */
-.site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  height: var(--header-h);
-  display: flex;
-  align-items: center;
-  background: rgba(11, 12, 26, 0.7);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--color-border);
-  transition: box-shadow var(--transition-base);
-}
-
-.site-header.is-scrolled {
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-}
-
-.nav {
-  width: min(1120px, 100% - var(--sp-8));
-  margin-inline: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.nav__logo {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  color: var(--color-white);
+  font-weight: 300;
+  line-height: 1.1;
   letter-spacing: -0.01em;
 }
 
-.nav__logo-icon {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
+em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--gold-400);
 }
 
-.nav__links {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-8);
-}
-
-.nav__link {
-  font-size: var(--text-md);
-  color: var(--color-text-muted);
-  transition: color var(--transition-fast);
-  position: relative;
-}
-
-.nav__link::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--grad-primary);
-  border-radius: var(--radius-full);
-  transition: width var(--transition-base);
-}
-
-.nav__link:hover {
-  color: var(--color-white);
-}
-
-.nav__link:hover::after {
-  width: 100%;
-}
-
-.nav__hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  padding: var(--sp-2);
-  border-radius: var(--radius-sm);
-}
-
-.nav__hamburger span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: var(--color-text);
-  border-radius: var(--radius-full);
-  transition: transform var(--transition-base), opacity var(--transition-base);
-}
 
 /* ============================================================
-   8. HERO SECTION
+   4. LAYOUT — HOME SCREEN
    ============================================================ */
-.hero {
+.home {
   position: relative;
   min-height: 100dvh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding-block: var(--sp-24);
-  padding-top: calc(var(--header-h) + var(--sp-24));
-  background: var(--grad-hero);
+  justify-content: center;
+  padding: var(--sp-6) var(--sp-4);
+  /* Reserve space so FAB (top-right) doesn't overlap content */
+  padding-top: calc(var(--fab-size) + var(--sp-8));
+  padding-bottom: var(--sp-10);
   overflow: hidden;
 }
 
-/* Background decorative orbs */
-.hero__bg-orbs {
+/* Central glass card */
+.home__card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface-card);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  padding: var(--sp-8) var(--sp-6) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-5);
+  /* Entry animation */
+  animation: cardEntrance 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Bottom tagline under card */
+.home__tagline {
+  position: relative;
+  z-index: 2;
+  margin-top: var(--sp-5);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-align: center;
+  font-style: italic;
+  font-family: var(--font-display);
+  animation: fadeUp 1.4s ease both;
+  animation-delay: 0.5s;
+}
+
+
+/* ============================================================
+   5. BACKGROUND DECORATIONS
+   ============================================================ */
+.home__bg {
   position: absolute;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
+  z-index: 0;
 }
 
-.orb {
+.bg-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(90px);
+}
+
+.bg-orb--1 {
+  width: min(500px, 100vw);
+  height: min(500px, 100vw);
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.18) 0%, transparent 70%);
+  top: -15%;
+  left: -15%;
+  animation: orbDrift 18s ease-in-out infinite;
+}
+
+.bg-orb--2 {
+  width: min(400px, 90vw);
+  height: min(400px, 90vw);
+  background: radial-gradient(circle, rgba(100, 80, 200, 0.12) 0%, transparent 70%);
+  bottom: -10%;
+  right: -10%;
+  animation: orbDrift 22s ease-in-out infinite reverse;
+  animation-delay: -8s;
+}
+
+.bg-orb--3 {
+  width: min(280px, 70vw);
+  height: min(280px, 70vw);
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
+  top: 55%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: orbDrift 28s ease-in-out infinite;
+  animation-delay: -14s;
+}
+
+/* Subtle dot-grid overlay */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(201,168,76,0.07) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+
+/* ============================================================
+   6. VISUAL — BREATH CIRCLE & RINGS
+   ============================================================ */
+.home__visual {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Concentric decorative rings */
+.breath-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--border-gold);
+}
+
+.breath-ring--outer {
+  inset: -12px;
+  opacity: 0.4;
+  animation: ringPulse 5s ease-in-out infinite;
+}
+
+.breath-ring--mid {
+  inset: -4px;
   opacity: 0.25;
-  animation: orbFloat 14s ease-in-out infinite;
+  animation: ringPulse 5s ease-in-out infinite;
+  animation-delay: -2.5s;
 }
 
-.orb--1 {
-  width: 600px;
-  height: 600px;
-  background: var(--color-primary);
-  top: -200px;
-  right: -150px;
-  animation-delay: 0s;
-}
-
-.orb--2 {
-  width: 400px;
-  height: 400px;
-  background: var(--color-accent);
-  bottom: -100px;
-  left: -120px;
-  animation-delay: -5s;
-}
-
-.orb--3 {
-  width: 300px;
-  height: 300px;
-  background: #b39ddb;
-  top: 40%;
-  left: 40%;
-  animation-delay: -9s;
-}
-
-.hero__content {
-  position: relative;
-  z-index: 1;
-  max-width: 640px;
-}
-
-.hero__eyebrow {
-  font-size: var(--text-sm);
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  margin-bottom: var(--sp-4);
-}
-
-.hero__title {
-  font-size: clamp(var(--text-4xl), 8vw, var(--text-5xl));
-  font-weight: 700;
-  color: var(--color-white);
-  margin-bottom: var(--sp-6);
-  letter-spacing: -0.02em;
-}
-
-.hero__subtitle {
-  font-size: clamp(var(--text-md), 2.5vw, var(--text-xl));
-  color: var(--color-text-muted);
-  margin-bottom: var(--sp-8);
-  max-width: 50ch;
-  line-height: 1.75;
-}
-
-.hero__cta-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-4);
-}
-
-/* Hero decorative breath ring */
-.breath-ring-hero {
-  position: absolute;
-  right: 8%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 380px;
-  height: 380px;
-  border-radius: 50%;
-  border: 2px solid rgba(108, 99, 255, 0.3);
-  animation: pulseRing 6s ease-in-out infinite;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.breath-ring-hero__inner {
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(108, 99, 255, 0.25) 0%, rgba(72, 201, 176, 0.1) 60%, transparent 100%);
-  border: 1.5px solid rgba(72, 201, 176, 0.2);
-  animation: pulseRing 6s ease-in-out infinite reverse;
-}
-
-/* ============================================================
-   9. EXERCISES SECTION
-   ============================================================ */
-.exercises {
-  background: var(--color-surface);
-}
-
-.exercise-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--sp-6);
-}
-
-.exercise-card {
-  background: var(--grad-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--sp-8);
-  display: flex;
-  flex-direction: column;
-  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
-}
-
-.exercise-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-md), var(--shadow-glow-primary);
-  border-color: rgba(108, 99, 255, 0.4);
-}
-
-.exercise-card.is-selected {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-glow-primary);
-}
-
-.exercise-card__icon {
-  font-size: 2rem;
-  margin-bottom: var(--sp-4);
-}
-
-.exercise-card__title {
-  font-size: var(--text-xl);
-  color: var(--color-white);
-  margin-bottom: var(--sp-3);
-}
-
-.exercise-card__desc {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  line-height: 1.7;
-  flex: 1;
-}
-
-.exercise-card__tag {
-  display: inline-block;
-  margin-top: var(--sp-4);
-  padding: var(--sp-1) var(--sp-3);
-  border-radius: var(--radius-full);
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
-
-/* ============================================================
-   10. TIMER SECTION
-   ============================================================ */
-.timer-section {
-  background: var(--color-bg);
-}
-
-.timer-section__inner {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--sp-16);
-  align-items: center;
-}
-
-.timer__phase-label {
-  font-size: var(--text-2xl);
-  font-weight: 600;
-  color: var(--color-accent);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: var(--sp-2);
-  min-height: 2rem;
-  transition: color var(--transition-base);
-}
-
-.timer__count {
-  font-size: clamp(var(--text-4xl), 10vw, 6rem);
-  font-weight: 700;
-  color: var(--color-white);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  margin-bottom: var(--sp-8);
-  transition: color var(--transition-base);
-}
-
-.timer__controls {
-  display: flex;
-  gap: var(--sp-4);
-  flex-wrap: wrap;
-  margin-bottom: var(--sp-6);
-}
-
-.timer__sessions {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-}
-
-.timer__sessions strong {
-  color: var(--color-accent);
-}
-
-/* Animated breath circle */
-.breath-circle-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+/* Main breath circle */
 .breath-circle {
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(108,99,255,0.3) 0%, rgba(72,201,176,0.15) 60%, transparent 100%);
-  border: 2px solid rgba(108, 99, 255, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: var(--shadow-glow-primary);
-  transition: transform var(--transition-slow), box-shadow var(--transition-slow),
-              background var(--transition-slow), border-color var(--transition-slow);
-}
-
-.breath-circle::before {
-  content: '';
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-  border: 1px solid rgba(108, 99, 255, 0.15);
-  animation: pulseRing 4s ease-in-out infinite;
-}
-
-.breath-circle.is-inhale {
-  transform: scale(1.35);
-  box-shadow: var(--shadow-glow-primary), 0 0 80px rgba(108, 99, 255, 0.5);
-  border-color: var(--color-primary);
-}
-
-.breath-circle.is-hold {
-  transform: scale(1.35);
-  box-shadow: var(--shadow-glow-accent), 0 0 80px rgba(72, 201, 176, 0.4);
-  border-color: var(--color-accent);
-  background: radial-gradient(circle, rgba(72,201,176,0.25) 0%, rgba(108,99,255,0.1) 60%, transparent 100%);
-}
-
-.breath-circle.is-exhale {
-  transform: scale(0.75);
-  box-shadow: 0 0 20px rgba(108, 99, 255, 0.15);
-  border-color: rgba(108, 99, 255, 0.2);
-}
-
-.breath-circle__text {
-  font-size: var(--text-lg);
-  font-weight: 500;
-  color: var(--color-text-muted);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: color var(--transition-base);
-  pointer-events: none;
-  user-select: none;
-}
-
-/* ============================================================
-   11. SOUNDS SECTION
-   ============================================================ */
-.sounds {
-  background: var(--color-surface);
-}
-
-.sound-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--sp-6);
-  margin-bottom: var(--sp-8);
-}
-
-.sound-card {
-  background: var(--grad-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--sp-8) var(--sp-6);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--sp-4);
-  text-align: center;
-  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
-}
-
-.sound-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(108, 99, 255, 0.3);
-}
-
-.sound-card.is-playing {
-  border-color: var(--color-accent);
-  box-shadow: var(--shadow-glow-accent);
-}
-
-.sound-card__emoji {
-  font-size: 2.5rem;
-}
-
-.sound-card__name {
-  font-size: var(--text-md);
-  font-weight: 500;
-  color: var(--color-text);
-}
-
-.sound-card__toggle {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: var(--color-primary-soft);
-  border: 1.5px solid rgba(108, 99, 255, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background var(--transition-base), transform var(--transition-fast), border-color var(--transition-base);
-}
-
-.sound-card__toggle:hover {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  transform: scale(1.1);
-}
-
-.sound-card__toggle[aria-pressed="true"] {
-  background: var(--grad-primary);
-  border-color: transparent;
-  box-shadow: 0 4px 16px rgba(108, 99, 255, 0.5);
-}
-
-.sound-card__toggle-icon {
-  font-size: var(--text-lg);
-  color: var(--color-white);
-  line-height: 1;
-  /* shift ▶ optically */
-  padding-left: 3px;
-}
-
-.sound-card__volume {
   width: 100%;
-  height: 4px;
-  border-radius: var(--radius-full);
-  -webkit-appearance: none;
-  appearance: none;
-  background: rgba(255,255,255,0.1);
-  cursor: pointer;
-}
-
-.sound-card__volume::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
+  height: 100%;
   border-radius: 50%;
-  background: var(--color-primary);
-  box-shadow: 0 0 8px rgba(108, 99, 255, 0.5);
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(245, 215, 142, 0.22) 0%,
+    rgba(201, 168, 76, 0.1)  50%,
+    rgba(10, 13, 28, 0.6)    100%
+  );
+  border: 1.5px solid var(--border-gold);
+  box-shadow:
+    0 0 0 1px rgba(201,168,76,0.08),
+    inset 0 0 30px rgba(201,168,76,0.1),
+    var(--shadow-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: breathe 7s ease-in-out infinite;
 }
 
-.sounds__note {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  text-align: center;
-  padding: var(--sp-4);
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius-md);
+.breath-circle__inner {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.breath-circle__logo {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(0 0 12px rgba(201,168,76,0.6));
+}
+
 
 /* ============================================================
-   12. FOOTER
+   7. HEADER — TITLE, DIVIDER & QUOTE
    ============================================================ */
-.site-footer {
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-border);
-  padding-block: var(--sp-12);
+.home__header {
   text-align: center;
 }
 
-.site-footer__text {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
+.home__eyebrow {
+  font-size: var(--text-xs);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  font-weight: 500;
   margin-bottom: var(--sp-2);
+  font-family: var(--font-body);
 }
 
-.site-footer__tagline {
-  font-size: var(--text-md);
+.home__title {
+  font-size: clamp(var(--text-4xl), 11vw, var(--text-5xl));
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.home__title em {
+  display: block;
+  font-size: 1.08em;
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 18px rgba(201,168,76,0.5));
+}
+
+/* Ornamental divider */
+.home__divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: var(--sp-3);
+}
+
+.home__divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-500), transparent);
+  opacity: 0.35;
+}
+
+.home__divider-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold-500);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* Quote */
+.home__quote {
+  text-align: center;
+  padding: var(--sp-2) var(--sp-4);
+}
+
+.home__quote p {
   font-family: var(--font-display);
   font-style: italic;
-  color: var(--color-accent);
+  font-weight: 300;
+  font-size: clamp(var(--text-lg), 4.5vw, var(--text-xl));
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+  line-height: 1.5;
 }
 
+
 /* ============================================================
-   13. ANIMATIONS & KEYFRAMES
+   8. BUTTONS
+   ============================================================ */
+.home__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  width: 100%;
+}
+
+.btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: var(--sp-4) var(--sp-6);
+  border-radius: var(--radius-md);
+  font-size: var(--text-md);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  overflow: hidden;
+  transition:
+    transform var(--t-fast),
+    box-shadow var(--t-base),
+    opacity var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: transform var(--t-base);
+}
+
+.btn:hover .btn__icon {
+  transform: scale(1.15);
+}
+
+/* Shine overlay on hover */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity var(--t-base);
+  pointer-events: none;
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+/* ---- PRIMARY — gold fill ---- */
+.btn--primary {
+  background: var(--grad-btn-primary);
+  color: var(--navy-950);
+  font-weight: 600;
+  box-shadow: var(--shadow-btn);
+}
+
+.btn--primary:hover {
+  background: var(--grad-btn-hover);
+  box-shadow: var(--shadow-btn-hov);
+  transform: translateY(-2px);
+}
+
+/* ---- SECONDARY — outlined gold ---- */
+.btn--secondary {
+  background: transparent;
+  color: var(--gold-400);
+  border: 1.5px solid var(--border-gold);
+  backdrop-filter: blur(4px);
+}
+
+.btn--secondary:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: var(--gold-400);
+  box-shadow: 0 4px 20px rgba(201,168,76,0.2);
+  transform: translateY(-2px);
+}
+
+
+/* ============================================================
+   9. AMBIENT BAR (bottom of card)
+   ============================================================ */
+.home__ambient-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding-top: var(--sp-2);
+  opacity: 0.5;
+}
+
+.ambient-dot {
+  display: block;
+  width: 3px;
+  border-radius: var(--radius-full);
+  background: var(--gold-500);
+  animation: ambientWave 1.8s ease-in-out infinite;
+}
+
+/* Give each dot a different height so they look like a waveform */
+.ambient-dot:nth-child(1) { height: 8px; }
+.ambient-dot:nth-child(2) { height: 14px; }
+.ambient-dot:nth-child(3) { height: 10px; }
+.ambient-dot:nth-child(4) { height: 18px; }
+.ambient-dot:nth-child(5) { height: 10px; }
+.ambient-dot:nth-child(6) { height: 14px; }
+.ambient-dot:nth-child(7) { height: 8px; }
+
+/* Paused state (when sound is off) */
+.home__ambient-bar.is-paused .ambient-dot {
+  animation-play-state: paused;
+  height: 3px !important;
+  transition: height 0.4s ease;
+}
+
+
+/* ============================================================
+   10. FLOATING SOUND BUTTON (FAB)
+   ============================================================ */
+.sound-fab {
+  position: fixed;
+  top: var(--sp-4);
+  right: var(--sp-4);
+  z-index: 200;
+  width: var(--fab-size);
+  height: var(--fab-size);
+  border-radius: 50%;
+  background: var(--surface-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-gold);
+  box-shadow: var(--shadow-fab);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-400);
+  overflow: hidden;
+  transition:
+    transform var(--t-fast),
+    box-shadow var(--t-base),
+    border-color var(--t-base),
+    color var(--t-base);
+  animation: fabEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.3s;
+}
+
+.sound-fab:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-fab), 0 0 24px var(--gold-glow);
+  border-color: var(--gold-400);
+}
+
+.sound-fab:active {
+  transform: scale(0.95);
+}
+
+/* Icon visibility — by default show "on" icon */
+.sound-fab__icon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transition: opacity var(--t-base), transform var(--t-base);
+}
+
+.sound-fab__icon--on  { opacity: 1;  transform: scale(1); }
+.sound-fab__icon--off { opacity: 0;  transform: scale(0.7); }
+
+/* When muted: swap icons */
+.sound-fab[aria-pressed="true"] .sound-fab__icon--on  { opacity: 0; transform: scale(0.7); }
+.sound-fab[aria-pressed="true"] .sound-fab__icon--off { opacity: 1; transform: scale(1);   }
+
+/* Click ripple */
+.sound-fab__ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.25);
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}
+
+.sound-fab.is-rippling .sound-fab__ripple {
+  animation: rippleOut 0.5s ease forwards;
+}
+
+/* Active (playing) state ring */
+.sound-fab[aria-pressed="true"] {
+  border-color: var(--gold-400);
+  box-shadow: var(--shadow-fab), 0 0 0 3px rgba(201,168,76,0.2);
+}
+
+
+/* ============================================================
+   11. ANIMATIONS & KEYFRAMES
    ============================================================ */
 
-/* Floating orbs */
-@keyframes orbFloat {
+/* Background orb drift */
+@keyframes orbDrift {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(30px, -40px) scale(1.05); }
-  66%       { transform: translate(-20px, 25px) scale(0.95); }
+  33%       { transform: translate(30px, -40px) scale(1.08); }
+  66%       { transform: translate(-25px, 30px) scale(0.94); }
 }
 
-/* Pulsing ring */
-@keyframes pulseRing {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50%       { opacity: 1;   transform: scale(1.06); }
+/* Card entrance */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-/* Gentle float for hero ring */
-@keyframes heroRingFloat {
-  0%, 100% { transform: translateY(-50%) rotate(0deg); }
-  50%       { transform: translateY(calc(-50% - 20px)) rotate(180deg); }
+/* FAB entrance */
+@keyframes fabEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-45deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
 }
+
+/* Generic fade-up */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Breath circle inhale/exhale */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,0.08),
+      inset 0 0 30px rgba(201,168,76,0.1),
+      0 0 40px rgba(201,168,76,0.15);
+  }
+  50% {
+    transform: scale(1.12);
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,0.18),
+      inset 0 0 50px rgba(201,168,76,0.2),
+      0 0 70px rgba(201,168,76,0.35);
+  }
+}
+
+/* Outer rings */
+@keyframes ringPulse {
+  0%, 100% { transform: scale(1);    opacity: 0.4; }
+  50%       { transform: scale(1.06); opacity: 0.1; }
+}
+
+/* Ambient waveform dots */
+@keyframes ambientWave {
+  0%, 100% { transform: scaleY(0.4); }
+  50%       { transform: scaleY(1);   }
+}
+
+/* FAB ripple */
+@keyframes rippleOut {
+  0%   { opacity: 1;  transform: scale(0); }
+  100% { opacity: 0;  transform: scale(2.5); }
+}
+
 
 /* ============================================================
-   14. RESPONSIVE (MEDIA QUERIES)
+   12. RESPONSIVE — TABLET & DESKTOP
    ============================================================ */
-
-/* Tablet and below */
-@media (max-width: 768px) {
-  /* Nav */
-  .nav__hamburger {
-    display: flex;
+@media (min-width: 480px) {
+  .home__card {
+    padding: var(--sp-10) var(--sp-8) var(--sp-8);
+    gap: var(--sp-6);
   }
 
-  .nav__links {
-    display: none;
-    position: absolute;
-    top: var(--header-h);
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    background: rgba(11, 12, 26, 0.97);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--color-border);
-    padding: var(--sp-4) var(--sp-6);
-  }
-
-  .nav__links.is-open {
-    display: flex;
-  }
-
-  .nav__link {
-    padding: var(--sp-4) 0;
-    width: 100%;
-    border-bottom: 1px solid var(--color-border);
-    font-size: var(--text-lg);
-  }
-
-  .nav__link:last-child {
-    border-bottom: none;
-  }
-
-  /* Hero */
-  .breath-ring-hero {
-    display: none;
-  }
-
-  .hero__content {
-    text-align: center;
-    max-width: 100%;
-  }
-
-  .hero__subtitle {
-    max-width: 100%;
-  }
-
-  .hero__cta-group {
-    justify-content: center;
-  }
-
-  /* Timer */
-  .timer-section__inner {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: var(--sp-12);
-  }
-
-  .timer__controls {
-    justify-content: center;
-  }
-
-  .timer__sessions {
-    text-align: center;
-  }
-
-  /* Exercises */
-  .exercise-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-  .hero__title {
-    font-size: var(--text-4xl);
-  }
-
-  .hero__cta-group {
-    flex-direction: column;
+  .home__visual {
+    width: 160px;
+    height: 160px;
   }
 
   .btn {
-    width: 100%;
+    font-size: var(--text-lg);
+    padding: var(--sp-5) var(--sp-8);
+  }
+}
+
+@media (min-width: 768px) {
+  .home {
+    padding: var(--sp-16) var(--sp-8);
+    padding-top: var(--sp-16);
   }
 
-  .sound-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .home__card {
+    max-width: 480px;
+    padding: var(--sp-12) var(--sp-10) var(--sp-10);
+    border-radius: calc(var(--radius-xl) + 8px);
+  }
+
+  .home__visual {
+    width: 180px;
+    height: 180px;
+  }
+
+  .home__actions {
+    flex-direction: row;
+  }
+
+  .sound-fab {
+    top: var(--sp-6);
+    right: var(--sp-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .home__card {
+    max-width: 520px;
+  }
+
+  .home__title {
+    font-size: var(--text-5xl);
+  }
+
+  .home__quote p {
+    font-size: var(--text-xl);
+  }
+}
+
+/* Reduced-motion: keep layout, remove animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
