@@ -636,6 +636,53 @@
     </section><!-- /#screen-completion -->
 
 
+    <!-- =============================================
+         SOUND SETTINGS DRAWER
+         ============================================= -->
+    <div class="sound-drawer" id="sound-drawer" aria-hidden="true">
+      <div class="sound-drawer__overlay" id="sound-drawer-overlay"></div>
+      <div class="sound-drawer__content">
+        <header class="sound-drawer__header">
+          <h3 class="sound-drawer__title">Ambient Sounds</h3>
+          <button class="sound-drawer__close" id="sound-drawer-close" aria-label="Close sound settings">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </header>
+        <ul class="sound-drawer__options" role="radiogroup" aria-label="Select ambient sound">
+          <li class="sound-drawer__option" role="radio" aria-checked="false" id="sound-opt-rain" data-sound="rain">
+            <span class="sound-drawer__option-icon">🌧</span>
+            <span class="sound-drawer__option-name">Rain</span>
+          </li>
+          <li class="sound-drawer__option" role="radio" aria-checked="false" id="sound-opt-ocean" data-sound="ocean">
+            <span class="sound-drawer__option-icon">🌊</span>
+            <span class="sound-drawer__option-name">Ocean</span>
+          </li>
+          <li class="sound-drawer__option" role="radio" aria-checked="false" id="sound-opt-forest" data-sound="forest">
+            <span class="sound-drawer__option-icon">🌲</span>
+            <span class="sound-drawer__option-name">Forest</span>
+          </li>
+          <li class="sound-drawer__option" role="radio" aria-checked="false" id="sound-opt-wind" data-sound="wind">
+            <span class="sound-drawer__option-icon">💨</span>
+            <span class="sound-drawer__option-name">Wind</span>
+          </li>
+          <li class="sound-drawer__option" role="radio" aria-checked="false" id="sound-opt-white-noise" data-sound="white-noise">
+            <span class="sound-drawer__option-icon">░</span>
+            <span class="sound-drawer__option-name">White Noise</span>
+          </li>
+          <li class="sound-drawer__option" role="radio" aria-checked="false" id="sound-opt-bell" data-sound="temple-bell">
+            <span class="sound-drawer__option-icon">🔔</span>
+            <span class="sound-drawer__option-name">Temple Bell</span>
+          </li>
+          <li class="sound-drawer__option" role="radio" aria-checked="false" id="sound-opt-mute" data-sound="mute">
+            <span class="sound-drawer__option-icon">🔇</span>
+            <span class="sound-drawer__option-name">Mute</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <script src="script.js"></script>
   </body>
 </html>

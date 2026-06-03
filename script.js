@@ -199,29 +199,46 @@ const initScreens = () => {
 };
 
 /* ============================================================
-   4. FLOATING SOUND FAB
+   4. FLOATING SOUND FAB & DRAWER
    ============================================================ */
-const initSoundFab = () => {
-  const fab        = $('#sound-fab');
-  const ambientBar = $('#ambient-bar');
 
-  if (!fab) return;
+/**
+ * Application state for sound settings.
+ */
+const soundSettings = {
+  currentSound: 'rain', // default selection
+};
 
-  /** Ambient audio — point to your file in assets/sounds/ */
-  const AMBIENT_SRC = 'assets/sounds/rain.mp3';
+const openSoundDrawer = () => {
+  const drawer = $('#sound-drawer');
+  if (drawer) {
+    drawer.classList.add('is-active');
+    drawer.setAttribute('aria-hidden', 'false');
+  }
+};
 
-  let audio     = null;
-  let isPlaying = false;
+const closeSoundDrawer = () => {
+  const drawer = $('#sound-drawer');
+  if (drawer) {
+    drawer.classList.remove('is-active');
+    drawer.setAttribute('aria-hidden', 'true');
+  }
+};
 
-  /** Lazily create the Audio object (only on first click) */
-  const getAudio = () => {
-    if (!audio) {
-      audio        = new Audio(AMBIENT_SRC);
-      audio.loop   = true;
-      audio.volume = 0.5;
-    }
-    return audio;
-  };
+const initSoundDrawer = () => {
+  const fab = $('#sound-fab');
+  const drawer = $('#sound-drawer');
+  const closeBtn = $('#sound-drawer-close');
+  const overlay = $('#sound-drawer-overlay');
+
+  if (!fab || !drawer) return;
+
+  // Set default selection in UI
+  const defaultOpt = $('#sound-opt-rain');
+  if (defaultOpt) {
+    defaultOpt.classList.add('is-selected');
+    defaultOpt.setAttribute('aria-checked', 'true');
+  }
 
   /** Trigger a brief ripple animation on the FAB */
   const triggerRipple = () => {
@@ -232,41 +249,50 @@ const initSoundFab = () => {
     fab.addEventListener('animationend', () => fab.classList.remove('is-rippling'), { once: true });
   };
 
-  fab.addEventListener('click', async () => {
+  // Open drawer
+  fab.addEventListener('click', (e) => {
+    e.stopPropagation();
     triggerRipple();
-
-    if (isPlaying) {
-      // — Pause —
-      getAudio().pause();
-      isPlaying = false;
-      fab.setAttribute('aria-pressed', 'false');
-      fab.title = 'Play ambient sound';
-      if (ambientBar) ambientBar.classList.add('is-paused');
-    } else {
-      // — Play —
-      try {
-        await getAudio().play();
-        isPlaying = true;
-        fab.setAttribute('aria-pressed', 'true');
-        fab.title = 'Pause ambient sound';
-        if (ambientBar) ambientBar.classList.remove('is-paused');
-      } catch (err) {
-        // Audio file not found — gracefully notify in console only
-        console.info(
-          '%cJust Breath: Add an audio file to assets/sounds/rain.mp3 to enable ambient sound.',
-          'color: #C9A84C; font-style: italic;'
-        );
-        // Still toggle visual state so the UI feels responsive
-        isPlaying = true;
-        fab.setAttribute('aria-pressed', 'true');
-        fab.title = 'Pause ambient sound';
-        if (ambientBar) ambientBar.classList.remove('is-paused');
-      }
-    }
+    openSoundDrawer();
   });
 
-  // Initialise: bar starts paused (no sound on load)
-  if (ambientBar) ambientBar.classList.add('is-paused');
+  // Close drawer
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeSoundDrawer);
+  }
+
+  // Close drawer on overlay click
+  if (overlay) {
+    overlay.addEventListener('click', closeSoundDrawer);
+  }
+
+  // Handle option selection
+  const options = document.querySelectorAll('.sound-drawer__option');
+  options.forEach((opt) => {
+    opt.addEventListener('click', () => {
+      options.forEach((o) => {
+        o.classList.remove('is-selected');
+        o.setAttribute('aria-checked', 'false');
+      });
+      opt.classList.add('is-selected');
+      opt.setAttribute('aria-checked', 'true');
+
+      soundSettings.currentSound = opt.dataset.sound;
+
+      console.log(
+        '%c[Sound Settings] current sound updated →',
+        'color: #C9A84C; font-style: italic;',
+        soundSettings.currentSound
+      );
+    });
+  });
+
+  // Close drawer on Escape keypress
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeSoundDrawer();
+    }
+  });
 };
 
 /* ============================================================
@@ -851,7 +877,7 @@ const startMeditationSession = () => {
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   initScreens();
-  initSoundFab();
+  initSoundDrawer();
   initHomeButtons();
   initBreathingSetup();
   initMeditationSetup();
