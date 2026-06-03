@@ -205,8 +205,19 @@ const initScreens = () => {
 /**
  * Application state for sound settings.
  */
+const SOUND_SOURCES = {
+  rain: 'assets/sounds/rain.mp3',
+  ocean: 'assets/sounds/ocean.mp3',
+  forest: 'assets/sounds/forest.mp3',
+  wind: 'assets/sounds/wind.mp3',
+  'white-noise': 'assets/sounds/white-noise.mp3',
+  'temple-bell': 'assets/sounds/temple-bell.mp3',
+};
+
 const soundSettings = {
   currentSound: 'rain', // default selection
+  isPlaying: false,
+  audioObjects: {},
 };
 
 const openSoundDrawer = () => {
@@ -222,6 +233,57 @@ const closeSoundDrawer = () => {
   if (drawer) {
     drawer.classList.remove('is-active');
     drawer.setAttribute('aria-hidden', 'true');
+  }
+};
+
+/**
+ * Stop any running sound and play the target sound key.
+ *
+ * @param {string} key - sound key or 'mute'
+ */
+const playAmbientSound = async (key) => {
+  // 1. Pause any currently playing audio
+  Object.values(soundSettings.audioObjects).forEach((audio) => {
+    if (audio) {
+      audio.pause();
+    }
+  });
+
+  soundSettings.currentSound = key;
+
+  const ambientBar = $('#ambient-bar');
+
+  if (key === 'mute') {
+    soundSettings.isPlaying = false;
+    if (ambientBar) ambientBar.classList.add('is-paused');
+    return;
+  }
+
+  // 2. Lazily create Audio object if it doesn't exist
+  if (!soundSettings.audioObjects[key]) {
+    const src = SOUND_SOURCES[key];
+    if (src) {
+      const audio = new Audio(src);
+      audio.loop = true;
+      audio.volume = 0.5;
+      soundSettings.audioObjects[key] = audio;
+    }
+  }
+
+  const currentAudio = soundSettings.audioObjects[key];
+  if (currentAudio) {
+    try {
+      await currentAudio.play();
+      soundSettings.isPlaying = true;
+      if (ambientBar) ambientBar.classList.remove('is-paused');
+    } catch (err) {
+      soundSettings.isPlaying = false;
+      if (ambientBar) ambientBar.classList.add('is-paused');
+      console.info(
+        `%cJust Breath: Ambient sound '${key}' could not be played. (Browser autoplay block or missing file at ${SOUND_SOURCES[key]})`,
+        'color: #C9A84C; font-style: italic;'
+      );
+    }
   }
 };
 
@@ -277,7 +339,8 @@ const initSoundDrawer = () => {
       opt.classList.add('is-selected');
       opt.setAttribute('aria-checked', 'true');
 
-      soundSettings.currentSound = opt.dataset.sound;
+      const soundKey = opt.dataset.sound;
+      playAmbientSound(soundKey);
 
       console.log(
         '%c[Sound Settings] current sound updated →',
@@ -293,6 +356,20 @@ const initSoundDrawer = () => {
       closeSoundDrawer();
     }
   });
+
+  // Attempt initial audio playback (gracefully catches block)
+  playAmbientSound('rain');
+
+  // Resume sound on first user interaction if not muted
+  const resumeOnInteraction = () => {
+    if (soundSettings.currentSound !== 'mute' && !soundSettings.isPlaying) {
+      playAmbientSound(soundSettings.currentSound);
+    }
+    document.removeEventListener('click', resumeOnInteraction);
+    document.removeEventListener('keydown', resumeOnInteraction);
+  };
+  document.addEventListener('click', resumeOnInteraction);
+  document.addEventListener('keydown', resumeOnInteraction);
 };
 
 /* ============================================================
