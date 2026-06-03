@@ -39,25 +39,59 @@ const SCREENS = {
 };
 
 /* ============================================================
-   3. SCREEN NAVIGATION STUBS
-   No functionality implemented yet — structure only.
-   Each function is a placeholder for the navigation logic
-   that will be wired up in a future step.
+   3. SCREEN NAVIGATION
+   showScreen() is the single source of truth for all
+   screen transitions in the application.
    ============================================================ */
 
 /**
- * Show a screen by its ID, hide all others.
- * Implementation placeholder — not functional yet.
- * @param {string} screenId — one of the SCREENS values
+ * Show a screen by its ID, hiding everything else.
+ *
+ * Strategy:
+ *  • Home (<main id="home">) is shown/hidden via inline display style
+ *    because it is not a .screen element.
+ *  • All .screen <section> elements are shown by toggling .is-active
+ *    (CSS rule: .screen.is-active { display: flex }).
+ *  • aria-hidden is kept in sync on every element for accessibility.
+ *
+ * @param {string} screenId — one of the SCREENS constant values
  */
 const showScreen = (screenId) => {
-  /* TODO: implement screen transition logic */
+  const homeEl = $('#home');
+
+  /* 1. Deactivate every .screen section */
+  document.querySelectorAll('.screen').forEach((section) => {
+    section.classList.remove('is-active');
+    section.setAttribute('aria-hidden', 'true');
+  });
+
+  if (screenId === SCREENS.HOME) {
+    /* 2a. Returning home — restore the <main> element */
+    if (homeEl) {
+      homeEl.style.display = '';
+      homeEl.removeAttribute('aria-hidden');
+    }
+  } else {
+    /* 2b. Navigating to a screen — hide home, activate target */
+    if (homeEl) {
+      homeEl.style.display = 'none';
+      homeEl.setAttribute('aria-hidden', 'true');
+    }
+
+    const target = $(`#${screenId}`);
+    if (target) {
+      target.classList.add('is-active');
+      target.removeAttribute('aria-hidden');
+      /* Scroll the new screen to top in case user had scrolled */
+      target.scrollTop = 0;
+    }
+  }
+
   console.log(`%c[Nav] → ${screenId}`, 'color: #C9A84C; font-style: italic;');
 };
 
 /**
  * Navigate back to the Home screen.
- * Implementation placeholder — not functional yet.
  */
 const goHome = () => {
   showScreen(SCREENS.HOME);
@@ -203,8 +237,7 @@ const initSoundFab = () => {
 /* ============================================================
    5. HOME BUTTON INTERACTIONS
    Wire the two Home Screen CTA buttons to their setup screens.
-   showScreen() is a console-only placeholder until navigation
-   is implemented in a future step.
+   showScreen() is now fully implemented in module 3.
    ============================================================ */
 const initHomeButtons = () => {
   const btnBreathing  = $('#btn-breathing');
@@ -370,10 +403,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initBreathingSetup();
 
   console.log(
-    '%c🧘 Just Breath — Breathing Setup controls active.\n' +
-    '   Default timings: breath=' + breathingSetup.timings.breath +
-    's · hold=' + breathingSetup.timings.hold +
-    's · release=' + breathingSetup.timings.release + 's',
+    '%c🧘 Just Breath — Navigation active.\n' +
+    '   Start Breathing → Breathing Setup\n' +
+    '   Start Meditation → Meditation Setup\n' +
+    '   Back buttons → Home',
     'color: #F5D78E; font-size: 13px; font-weight: 600; padding: 4px 0;'
   );
 });
