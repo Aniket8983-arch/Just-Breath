@@ -130,11 +130,17 @@ const initScreens = () => {
     btnCompletionHome.addEventListener('click', goHome);
   }
 
-  const btnCompletionAgain = $('#btn-completion-again');
-  if (btnCompletionAgain) {
-    btnCompletionAgain.addEventListener('click', () => {
-      /* TODO: restart last session */
-      console.log('%c[Nav] Go Again — placeholder', 'color: #C9A84C; font-style: italic;');
+  const btnCompletionBreathingAgain = $('#btn-completion-breathing-again');
+  if (btnCompletionBreathingAgain) {
+    btnCompletionBreathingAgain.addEventListener('click', () => {
+      showScreen(SCREENS.BREATHING_SETUP);
+    });
+  }
+
+  const btnCompletionMeditationAgain = $('#btn-completion-meditation-again');
+  if (btnCompletionMeditationAgain) {
+    btnCompletionMeditationAgain.addEventListener('click', () => {
+      showScreen(SCREENS.MEDITATION_SETUP);
     });
   }
 
@@ -672,6 +678,16 @@ const endMeditationSession = () => {
 const completeMeditationSession = () => {
   const { duration } = meditationSession;
   stopMeditationTimer();
+
+  const titleEl = $('#completion-title');
+  if (titleEl) {
+    titleEl.textContent = 'Session Complete 🎉';
+  }
+
+  const quoteEl = $('#completion-quote');
+  if (quoteEl) {
+    quoteEl.innerHTML = '<p>"Quiet the mind, and the soul will speak."</p>';
+  }
 
   const statType = $('#stat-type');
   const statDuration = $('#stat-duration');
