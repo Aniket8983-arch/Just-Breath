@@ -1,32 +1,147 @@
 /**
- * Just Breath — Home Screen JavaScript
+ * Just Breath — Application JavaScript
  *
- * Handles:
- *  1. Floating Sound FAB — toggle ambient sound (with graceful fallback)
- *  2. Button interactions — ripple + toast feedback
- *  3. Ambient bar sync with sound state
+ * Modules:
+ *  1. Utilities
+ *  2. Screen Registry — IDs for all application screens
+ *  3. Screen Navigation stubs (no functionality yet)
+ *  4. Floating Sound FAB — toggle ambient sound (with graceful fallback)
+ *  5. Home button interactions — wire Home buttons to screens
+ *  6. Init
+ *
+ * Screens defined in index.html:
+ *  #home                      — visible on load (main element)
+ *  #screen-breathing-setup    — hidden on load
+ *  #screen-breathing-session  — hidden on load
+ *  #screen-meditation-setup   — hidden on load
+ *  #screen-meditation-session — hidden on load
+ *  #screen-completion         — hidden on load
  */
 
 'use strict';
 
 /* ============================================================
-   UTILITIES
+   1. UTILITIES
    ============================================================ */
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 
 /* ============================================================
-   1. FLOATING SOUND FAB
+   2. SCREEN REGISTRY
+   Central list of every screen ID in the application.
+   ============================================================ */
+const SCREENS = {
+  HOME:               'home',                    /* <main> element */
+  BREATHING_SETUP:    'screen-breathing-setup',
+  BREATHING_SESSION:  'screen-breathing-session',
+  MEDITATION_SETUP:   'screen-meditation-setup',
+  MEDITATION_SESSION: 'screen-meditation-session',
+  COMPLETION:         'screen-completion',
+};
+
+/* ============================================================
+   3. SCREEN NAVIGATION STUBS
+   No functionality implemented yet — structure only.
+   Each function is a placeholder for the navigation logic
+   that will be wired up in a future step.
+   ============================================================ */
+
+/**
+ * Show a screen by its ID, hide all others.
+ * Implementation placeholder — not functional yet.
+ * @param {string} screenId — one of the SCREENS values
+ */
+const showScreen = (screenId) => {
+  /* TODO: implement screen transition logic */
+  console.log(`%c[Nav] → ${screenId}`, 'color: #C9A84C; font-style: italic;');
+};
+
+/**
+ * Navigate back to the Home screen.
+ * Implementation placeholder — not functional yet.
+ */
+const goHome = () => {
+  showScreen(SCREENS.HOME);
+};
+
+/**
+ * Initialise all navigation buttons across every screen.
+ * Wires each back-button and action-button to placeholder handlers.
+ */
+const initScreens = () => {
+  /* ---- Back / End buttons that return to home ---- */
+  const backButtonIds = [
+    'back-breathing-setup',
+    'back-breathing-session',
+    'back-meditation-setup',
+    'back-meditation-session',
+  ];
+
+  backButtonIds.forEach((id) => {
+    const btn = $(`#${id}`);
+    if (!btn) return;
+    btn.addEventListener('click', goHome);
+  });
+
+  /* ---- Completion screen actions ---- */
+  const btnCompletionHome = $('#btn-completion-home');
+  if (btnCompletionHome) {
+    btnCompletionHome.addEventListener('click', goHome);
+  }
+
+  const btnCompletionAgain = $('#btn-completion-again');
+  if (btnCompletionAgain) {
+    btnCompletionAgain.addEventListener('click', () => {
+      /* TODO: restart last session */
+      console.log('%c[Nav] Go Again — placeholder', 'color: #C9A84C; font-style: italic;');
+    });
+  }
+
+  /* ---- Setup → Session proceed buttons (placeholders) ---- */
+  const btnBeginBreathing = $('#btn-begin-breathing');
+  if (btnBeginBreathing) {
+    btnBeginBreathing.addEventListener('click', () => {
+      showScreen(SCREENS.BREATHING_SESSION);
+    });
+  }
+
+  const btnBeginMeditation = $('#btn-begin-meditation');
+  if (btnBeginMeditation) {
+    btnBeginMeditation.addEventListener('click', () => {
+      showScreen(SCREENS.MEDITATION_SESSION);
+    });
+  }
+
+  /* ---- Pause buttons — placeholders, no timer yet ---- */
+  const btnPauseBreathing = $('#btn-pause-breathing');
+  if (btnPauseBreathing) {
+    btnPauseBreathing.addEventListener('click', () => {
+      /* TODO: pause breathing timer */
+      console.log('%c[Session] Pause breathing — placeholder', 'color: #C9A84C; font-style: italic;');
+    });
+  }
+
+  const btnPauseMeditation = $('#btn-pause-meditation');
+  if (btnPauseMeditation) {
+    btnPauseMeditation.addEventListener('click', () => {
+      /* TODO: pause meditation timer */
+      console.log('%c[Session] Pause meditation — placeholder', 'color: #C9A84C; font-style: italic;');
+    });
+  }
+};
+
+/* ============================================================
+   4. FLOATING SOUND FAB
    ============================================================ */
 const initSoundFab = () => {
-  const fab         = $('#sound-fab');
-  const ambientBar  = $('#ambient-bar');
+  const fab        = $('#sound-fab');
+  const ambientBar = $('#ambient-bar');
 
   if (!fab) return;
 
   /** Ambient audio — point to your file in assets/sounds/ */
   const AMBIENT_SRC = 'assets/sounds/rain.mp3';
 
-  let audio    = null;
+  let audio     = null;
   let isPlaying = false;
 
   /** Lazily create the Audio object (only on first click) */
@@ -86,23 +201,17 @@ const initSoundFab = () => {
 };
 
 /* ============================================================
-   2. BUTTON INTERACTIONS
+   5. HOME BUTTON INTERACTIONS
+   Wire the two Home Screen CTA buttons to their setup screens.
+   showScreen() is a console-only placeholder until navigation
+   is implemented in a future step.
    ============================================================ */
-const initButtons = () => {
+const initHomeButtons = () => {
   const btnBreathing  = $('#btn-breathing');
   const btnMeditation = $('#btn-meditation');
 
-  /**
-   * Show a minimal toast / console message.
-   * Replace this stub with actual navigation when other screens exist.
-   */
-  const handleAction = (label) => {
-    console.log(
-      `%c🌬 Just Breath: "${label}" selected.`,
-      'color: #C9A84C; font-weight: bold; font-size: 13px;'
-    );
-
-    // Pulse the breath circle as visual feedback
+  /** Pulse the breath circle as visual feedback (kept from original) */
+  const pulseCircle = () => {
     const circle = $('#breath-circle');
     if (circle) {
       circle.style.transform = 'scale(1.18)';
@@ -116,23 +225,31 @@ const initButtons = () => {
   };
 
   if (btnBreathing) {
-    btnBreathing.addEventListener('click', () => handleAction('Start Breathing'));
+    btnBreathing.addEventListener('click', () => {
+      pulseCircle();
+      showScreen(SCREENS.BREATHING_SETUP);
+    });
   }
 
   if (btnMeditation) {
-    btnMeditation.addEventListener('click', () => handleAction('Start Meditation'));
+    btnMeditation.addEventListener('click', () => {
+      pulseCircle();
+      showScreen(SCREENS.MEDITATION_SETUP);
+    });
   }
 };
 
 /* ============================================================
-   3. INIT
+   6. INIT — run everything once DOM is ready
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
+  initScreens();
   initSoundFab();
-  initButtons();
+  initHomeButtons();
 
   console.log(
-    '%c🧘 Just Breath — Home Screen ready.',
-    'color: #F5D78E; font-size: 14px; font-weight: 600; padding: 4px 0;'
+    '%c🧘 Just Breath — Screen structure ready.\n   Screens: ' +
+      Object.values(SCREENS).join(' · '),
+    'color: #F5D78E; font-size: 13px; font-weight: 600; padding: 4px 0;'
   );
 });

@@ -166,6 +166,369 @@
 
     </main>
 
+    <!-- =============================================
+         SCREEN: BREATHING SETUP  (hidden on load)
+         ============================================= -->
+    <section
+      class="screen"
+      id="screen-breathing-setup"
+      data-screen="breathing-setup"
+      aria-hidden="true"
+      aria-label="Breathing Setup"
+    >
+      <!-- Back navigation -->
+      <nav class="screen__nav" aria-label="Breathing setup navigation">
+        <button class="screen__nav-back" id="back-breathing-setup" type="button" aria-label="Go back to home">
+          <!-- Left-arrow icon -->
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M12 4L6 10l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back
+        </button>
+        <span class="screen__nav-step">Step 1 of 2</span>
+      </nav>
+
+      <!-- Screen header -->
+      <header class="screen__header">
+        <p class="screen__eyebrow">breathing exercise</p>
+        <h2 class="screen__title">Choose Your Technique</h2>
+        <p class="screen__subtitle">Select a breathing pattern to begin your session.</p>
+      </header>
+
+      <!-- Technique options placeholder -->
+      <div class="screen__body" role="list" aria-label="Breathing techniques">
+
+        <div class="screen__option" role="listitem" id="opt-box">
+          <div class="screen__option-icon" aria-hidden="true">□</div>
+          <div class="screen__option-info">
+            <h3 class="screen__option-title">Box Breathing</h3>
+            <p class="screen__option-desc">4 · 4 · 4 · 4 — inhale, hold, exhale, hold</p>
+          </div>
+          <!-- Selection indicator placeholder -->
+          <span class="screen__option-check" aria-hidden="true"></span>
+        </div>
+
+        <div class="screen__option" role="listitem" id="opt-478">
+          <div class="screen__option-icon" aria-hidden="true">◑</div>
+          <div class="screen__option-info">
+            <h3 class="screen__option-title">4-7-8 Breathing</h3>
+            <p class="screen__option-desc">4 · 7 · 8 — inhale, hold, exhale</p>
+          </div>
+          <span class="screen__option-check" aria-hidden="true"></span>
+        </div>
+
+        <div class="screen__option" role="listitem" id="opt-diaphragm">
+          <div class="screen__option-icon" aria-hidden="true">≈</div>
+          <div class="screen__option-info">
+            <h3 class="screen__option-title">Diaphragmatic</h3>
+            <p class="screen__option-desc">5 · 5 — inhale, exhale</p>
+          </div>
+          <span class="screen__option-check" aria-hidden="true"></span>
+        </div>
+
+      </div><!-- /.screen__body -->
+
+      <!-- Duration placeholder -->
+      <div class="screen__duration-picker" aria-label="Session duration">
+        <p class="screen__label">Session Duration</p>
+        <div class="screen__duration-options">
+          <button class="screen__duration-btn" id="dur-breath-3" type="button">3 min</button>
+          <button class="screen__duration-btn" id="dur-breath-5" type="button">5 min</button>
+          <button class="screen__duration-btn" id="dur-breath-10" type="button">10 min</button>
+        </div>
+      </div>
+
+      <!-- Proceed navigation -->
+      <div class="screen__actions">
+        <button class="btn btn--primary" id="btn-begin-breathing" type="button">
+          Begin Session
+        </button>
+      </div>
+
+    </section><!-- /#screen-breathing-setup -->
+
+
+    <!-- =============================================
+         SCREEN: BREATHING SESSION  (hidden on load)
+         ============================================= -->
+    <section
+      class="screen"
+      id="screen-breathing-session"
+      data-screen="breathing-session"
+      aria-hidden="true"
+      aria-label="Breathing Session"
+    >
+      <!-- Back navigation -->
+      <nav class="screen__nav" aria-label="Breathing session navigation">
+        <button class="screen__nav-back" id="back-breathing-session" type="button" aria-label="End session and go back">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M12 4L6 10l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          End
+        </button>
+        <span class="screen__nav-step" id="breathing-session-label">Box Breathing</span>
+      </nav>
+
+      <!-- Screen header -->
+      <header class="screen__header screen__header--centered">
+        <p class="screen__eyebrow">session in progress</p>
+        <h2 class="screen__title" id="breathing-phase-title">Breathe</h2>
+      </header>
+
+      <!-- Breath visualiser placeholder -->
+      <div class="screen__body screen__body--centered">
+        <div class="session__visualiser" id="breathing-visualiser" aria-hidden="true">
+          <!-- Animated circle will be built here in a future step -->
+          <div class="session__visualiser-ring session__visualiser-ring--outer"></div>
+          <div class="session__visualiser-ring session__visualiser-ring--mid"></div>
+          <div class="session__visualiser-core">
+            <p class="session__count" id="breathing-count" aria-live="polite" aria-label="Count">–</p>
+          </div>
+        </div>
+
+        <!-- Phase label -->
+        <p class="session__phase" id="breathing-phase" aria-live="polite">–</p>
+
+        <!-- Progress bar placeholder -->
+        <div class="session__progress" aria-label="Session progress">
+          <div class="session__progress-track">
+            <div class="session__progress-fill" id="breathing-progress" style="width: 0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Session progress"></div>
+          </div>
+          <p class="session__progress-label" id="breathing-time-left">–</p>
+        </div>
+      </div>
+
+      <!-- Controls placeholder -->
+      <div class="screen__actions">
+        <button class="btn btn--secondary" id="btn-pause-breathing" type="button">
+          Pause
+        </button>
+      </div>
+
+    </section><!-- /#screen-breathing-session -->
+
+
+    <!-- =============================================
+         SCREEN: MEDITATION SETUP  (hidden on load)
+         ============================================= -->
+    <section
+      class="screen"
+      id="screen-meditation-setup"
+      data-screen="meditation-setup"
+      aria-hidden="true"
+      aria-label="Meditation Setup"
+    >
+      <!-- Back navigation -->
+      <nav class="screen__nav" aria-label="Meditation setup navigation">
+        <button class="screen__nav-back" id="back-meditation-setup" type="button" aria-label="Go back to home">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M12 4L6 10l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Back
+        </button>
+        <span class="screen__nav-step">Step 1 of 2</span>
+      </nav>
+
+      <!-- Screen header -->
+      <header class="screen__header">
+        <p class="screen__eyebrow">guided meditation</p>
+        <h2 class="screen__title">Set Your Intention</h2>
+        <p class="screen__subtitle">Personalise your meditation before you begin.</p>
+      </header>
+
+      <!-- Meditation type placeholder -->
+      <div class="screen__body">
+
+        <p class="screen__label">Focus</p>
+        <div class="screen__option-group" role="list" aria-label="Meditation focus options">
+
+          <div class="screen__option" role="listitem" id="opt-calm">
+            <div class="screen__option-icon" aria-hidden="true">◇</div>
+            <div class="screen__option-info">
+              <h3 class="screen__option-title">Calm &amp; Relax</h3>
+              <p class="screen__option-desc">Release tension and ease into stillness.</p>
+            </div>
+            <span class="screen__option-check" aria-hidden="true"></span>
+          </div>
+
+          <div class="screen__option" role="listitem" id="opt-focus">
+            <div class="screen__option-icon" aria-hidden="true">◈</div>
+            <div class="screen__option-info">
+              <h3 class="screen__option-title">Focus &amp; Clarity</h3>
+              <p class="screen__option-desc">Sharpen attention and clear mental fog.</p>
+            </div>
+            <span class="screen__option-check" aria-hidden="true"></span>
+          </div>
+
+          <div class="screen__option" role="listitem" id="opt-sleep">
+            <div class="screen__option-icon" aria-hidden="true">☽</div>
+            <div class="screen__option-info">
+              <h3 class="screen__option-title">Sleep &amp; Rest</h3>
+              <p class="screen__option-desc">Ease into restful, peaceful sleep.</p>
+            </div>
+            <span class="screen__option-check" aria-hidden="true"></span>
+          </div>
+
+        </div><!-- /.screen__option-group -->
+
+        <!-- Duration placeholder -->
+        <p class="screen__label">Duration</p>
+        <div class="screen__duration-options">
+          <button class="screen__duration-btn" id="dur-med-5" type="button">5 min</button>
+          <button class="screen__duration-btn" id="dur-med-10" type="button">10 min</button>
+          <button class="screen__duration-btn" id="dur-med-20" type="button">20 min</button>
+        </div>
+
+      </div><!-- /.screen__body -->
+
+      <!-- Proceed navigation -->
+      <div class="screen__actions">
+        <button class="btn btn--primary" id="btn-begin-meditation" type="button">
+          Begin Meditation
+        </button>
+      </div>
+
+    </section><!-- /#screen-meditation-setup -->
+
+
+    <!-- =============================================
+         SCREEN: MEDITATION SESSION  (hidden on load)
+         ============================================= -->
+    <section
+      class="screen"
+      id="screen-meditation-session"
+      data-screen="meditation-session"
+      aria-hidden="true"
+      aria-label="Meditation Session"
+    >
+      <!-- Back navigation -->
+      <nav class="screen__nav" aria-label="Meditation session navigation">
+        <button class="screen__nav-back" id="back-meditation-session" type="button" aria-label="End meditation and go back">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M12 4L6 10l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          End
+        </button>
+        <span class="screen__nav-step" id="meditation-session-label">Calm &amp; Relax</span>
+      </nav>
+
+      <!-- Screen header -->
+      <header class="screen__header screen__header--centered">
+        <p class="screen__eyebrow">meditating</p>
+        <h2 class="screen__title">Find Your Centre</h2>
+      </header>
+
+      <!-- Session body -->
+      <div class="screen__body screen__body--centered">
+
+        <!-- Ambient visualiser placeholder -->
+        <div class="session__visualiser session__visualiser--meditation" id="meditation-visualiser" aria-hidden="true">
+          <div class="session__visualiser-ring session__visualiser-ring--outer"></div>
+          <div class="session__visualiser-ring session__visualiser-ring--mid"></div>
+          <div class="session__visualiser-core">
+            <!-- Lotus icon carried over from home screen SVG defs -->
+            <svg viewBox="0 0 80 80" fill="none" class="session__visualiser-logo" aria-hidden="true">
+              <path d="M40 20 C25 28 22 46 40 56 C28 48 26 32 40 20Z" fill="url(#petalGrad)" opacity="0.9"/>
+              <path d="M40 20 C55 28 58 46 40 56 C52 48 54 32 40 20Z" fill="url(#petalGrad)" opacity="0.7"/>
+              <ellipse cx="40" cy="56" rx="8" ry="4" fill="url(#petalGrad)" opacity="0.5"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Elapsed / remaining time placeholder -->
+        <div class="session__time" aria-label="Time remaining">
+          <p class="session__time-value" id="meditation-time-left" aria-live="polite">–</p>
+          <p class="session__time-label">remaining</p>
+        </div>
+
+        <!-- Guidance text placeholder -->
+        <p class="session__guidance" id="meditation-guidance" aria-live="polite">
+          Close your eyes. Breathe naturally.
+        </p>
+
+        <!-- Progress bar placeholder -->
+        <div class="session__progress" aria-label="Meditation progress">
+          <div class="session__progress-track">
+            <div class="session__progress-fill" id="meditation-progress" style="width: 0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Meditation progress"></div>
+          </div>
+        </div>
+
+      </div><!-- /.screen__body -->
+
+      <!-- Controls placeholder -->
+      <div class="screen__actions">
+        <button class="btn btn--secondary" id="btn-pause-meditation" type="button">
+          Pause
+        </button>
+      </div>
+
+    </section><!-- /#screen-meditation-session -->
+
+
+    <!-- =============================================
+         SCREEN: COMPLETION  (hidden on load)
+         ============================================= -->
+    <section
+      class="screen"
+      id="screen-completion"
+      data-screen="completion"
+      aria-hidden="true"
+      aria-label="Session Complete"
+    >
+      <!-- Screen body — centred -->
+      <div class="screen__body screen__body--centered screen__body--completion">
+
+        <!-- Completion badge placeholder -->
+        <div class="completion__badge" id="completion-badge" aria-hidden="true">
+          <div class="completion__badge-ring"></div>
+          <span class="completion__badge-icon">✦</span>
+        </div>
+
+        <!-- Heading -->
+        <header class="screen__header screen__header--centered">
+          <p class="screen__eyebrow">well done</p>
+          <h2 class="screen__title" id="completion-title">Session Complete</h2>
+          <p class="screen__subtitle" id="completion-subtitle">
+            Take a moment to appreciate the stillness.
+          </p>
+        </header>
+
+        <!-- Stats summary placeholder -->
+        <dl class="completion__stats" aria-label="Session summary">
+          <div class="completion__stat">
+            <dt class="completion__stat-label">Type</dt>
+            <dd class="completion__stat-value" id="stat-type">–</dd>
+          </div>
+          <div class="completion__stat">
+            <dt class="completion__stat-label">Duration</dt>
+            <dd class="completion__stat-value" id="stat-duration">–</dd>
+          </div>
+          <div class="completion__stat">
+            <dt class="completion__stat-label">Rounds</dt>
+            <dd class="completion__stat-value" id="stat-rounds">–</dd>
+          </div>
+        </dl>
+
+        <!-- Closing quote placeholder -->
+        <blockquote class="completion__quote" id="completion-quote">
+          <p>"Each breath is a new beginning."</p>
+        </blockquote>
+
+      </div><!-- /.screen__body -->
+
+      <!-- Navigation actions -->
+      <div class="screen__actions screen__actions--completion">
+        <button class="btn btn--primary" id="btn-completion-again" type="button">
+          Go Again
+        </button>
+        <button class="btn btn--secondary" id="btn-completion-home" type="button">
+          Return Home
+        </button>
+      </div>
+
+    </section><!-- /#screen-completion -->
+
+
     <script src="script.js"></script>
   </body>
 </html>
