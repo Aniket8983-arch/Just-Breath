@@ -143,9 +143,7 @@ const initScreens = () => {
 
   const btnBeginMeditation = $('#btn-begin-meditation');
   if (btnBeginMeditation) {
-    btnBeginMeditation.addEventListener('click', () => {
-      showScreen(SCREENS.MEDITATION_SESSION);
-    });
+    btnBeginMeditation.addEventListener('click', startMeditationSession);
   }
 
   /* ---- Pause buttons ---- */
@@ -598,6 +596,115 @@ const startBreathingSession = () => {
 };
 
 /* ============================================================
+   7.5 MEDITATION SETUP STATE & CONTROLS
+   ============================================================ */
+
+/**
+ * Application state for the Meditation Setup screen.
+ */
+const meditationSetup = {
+  duration: 5,   // default 5 minutes
+  focus: 'calm', // default focus mode
+};
+
+/**
+ * Active Meditation Session state.
+ */
+const meditationSession = {
+  duration: 0,
+  focus: '',
+  isActive: false,
+};
+
+/**
+ * Initialise Meditation Setup selectors.
+ */
+const initMeditationSetup = () => {
+  // Set defaults in UI
+  const defDurBtn = $('#dur-med-5');
+  if (defDurBtn) defDurBtn.classList.add('is-selected');
+
+  const defOptCard = $('#opt-calm');
+  if (defOptCard) defOptCard.classList.add('is-selected');
+
+  // Handle duration preset clicks
+  const durationBtns = document.querySelectorAll('.screen__duration-btn');
+  durationBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      durationBtns.forEach((b) => b.classList.remove('is-selected'));
+      btn.classList.add('is-selected');
+
+      // Parse minutes from button id (e.g. dur-med-15 -> 15)
+      const minutes = parseInt(btn.id.replace('dur-med-', ''), 10);
+      meditationSetup.duration = minutes;
+
+      console.log(
+        '%c[Meditation Setup] duration updated →',
+        'color: #C9A84C; font-style: italic;',
+        meditationSetup.duration
+      );
+    });
+  });
+
+  // Handle focus card clicks
+  const optionCards = document.querySelectorAll('#screen-meditation-setup .screen__option');
+  optionCards.forEach((card) => {
+    card.addEventListener('click', () => {
+      optionCards.forEach((c) => c.classList.remove('is-selected'));
+      card.classList.add('is-selected');
+
+      if (card.id === 'opt-calm') {
+        meditationSetup.focus = 'calm';
+      } else if (card.id === 'opt-focus') {
+        meditationSetup.focus = 'focus';
+      } else if (card.id === 'opt-sleep') {
+        meditationSetup.focus = 'sleep';
+      }
+
+      console.log(
+        '%c[Meditation Setup] focus updated →',
+        'color: #C9A84C; font-style: italic;',
+        meditationSetup.focus
+      );
+    });
+  });
+};
+
+/**
+ * Called when the user clicks "Begin Meditation" on Setup screen.
+ */
+const startMeditationSession = () => {
+  const { duration, focus } = meditationSetup;
+
+  meditationSession.duration = duration;
+  meditationSession.focus = focus;
+  meditationSession.isActive = true;
+
+  // Update session screen label (e.g. "Calm & Relax (15m)")
+  const labelEl = $('#meditation-session-label');
+  if (labelEl) {
+    let focusLabel = 'Calm & Relax';
+    if (focus === 'focus') focusLabel = 'Focus & Clarity';
+    if (focus === 'sleep') focusLabel = 'Sleep & Rest';
+    labelEl.textContent = `${focusLabel} (${duration}m)`;
+  }
+
+  // Update session screen time display (e.g. "15:00")
+  const timeLeftEl = $('#meditation-time-left');
+  if (timeLeftEl) {
+    timeLeftEl.textContent = `${duration}:00`;
+  }
+
+  console.log(
+    '%c[Meditation Session] State locked in \u2192',
+    'color: #C9A84C; font-style: italic;',
+    { ...meditationSession }
+  );
+
+  showScreen(SCREENS.MEDITATION_SESSION);
+};
+
+/* ============================================================
    8. INIT — run everything once DOM is ready
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -605,6 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSoundFab();
   initHomeButtons();
   initBreathingSetup();
+  initMeditationSetup();
 
   console.log(
     '%c🧘 Just Breath — Navigation active.\n' +
