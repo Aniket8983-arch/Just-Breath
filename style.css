@@ -1278,3 +1278,152 @@ em {
   .session__visualiser { width: 280px; height: 280px; }
 }
 
+
+/* ============================================================
+   14. TIMING CONTROLS  (Breathing Setup screen)
+   New classes only — no existing rules modified.
+   ============================================================ */
+
+/* ---- Row container ---- */
+.timing-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-5) var(--sp-5);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: border-color var(--t-fast);
+}
+
+.timing-control:focus-within {
+  border-color: var(--border-gold);
+}
+
+/* ---- Label + hint ---- */
+.timing-control__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.timing-control__label {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.timing-control__hint {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--sp-1);
+  letter-spacing: 0.04em;
+}
+
+/* ---- Stepper group (minus · value · plus) ---- */
+.timing-control__stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-shrink: 0;
+}
+
+/* ---- Minus / Plus buttons ---- */
+.timing-control__btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-gold);
+  background: transparent;
+  color: var(--gold-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    color var(--t-fast),
+    transform var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.timing-control__btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.timing-control__btn:hover {
+  background: rgba(201, 168, 76, 0.12);
+  border-color: var(--gold-400);
+}
+
+.timing-control__btn:active {
+  transform: scale(0.9);
+  background: rgba(201, 168, 76, 0.2);
+}
+
+/* Disabled state — shown when value is at min or max */
+.timing-control__btn:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ---- Value display ---- */
+.timing-control__value-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 48px;
+}
+
+.timing-control__value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 300;
+  color: var(--gold-300);
+  line-height: 1;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--t-fast);
+}
+
+/* Flash when value changes */
+.timing-control__value.is-bumped {
+  color: var(--gold-400);
+}
+
+.timing-control__unit {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: var(--sp-1);
+}
+
+/* ---- Responsive ---- */
+@media (min-width: 480px) {
+  .timing-control {
+    padding: var(--sp-6);
+  }
+
+  .timing-control__btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .timing-control__value {
+    font-size: var(--text-4xl);
+  }
+
+  .timing-control__value-wrap {
+    min-width: 56px;
+  }
+}
+
+

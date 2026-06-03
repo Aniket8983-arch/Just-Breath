@@ -191,52 +191,155 @@
       <!-- Screen header -->
       <header class="screen__header">
         <p class="screen__eyebrow">breathing exercise</p>
-        <h2 class="screen__title">Choose Your Technique</h2>
-        <p class="screen__subtitle">Select a breathing pattern to begin your session.</p>
+        <h2 class="screen__title">Set Your Timing</h2>
+        <p class="screen__subtitle">Adjust each phase to match your pace.</p>
       </header>
 
-      <!-- Technique options placeholder -->
-      <div class="screen__body" role="list" aria-label="Breathing techniques">
+      <!-- ── Timing Controls ── -->
+      <div class="screen__body" aria-label="Breathing timing controls">
 
-        <div class="screen__option" role="listitem" id="opt-box">
-          <div class="screen__option-icon" aria-hidden="true">□</div>
-          <div class="screen__option-info">
-            <h3 class="screen__option-title">Box Breathing</h3>
-            <p class="screen__option-desc">4 · 4 · 4 · 4 — inhale, hold, exhale, hold</p>
+        <!-- ── Breath control ── -->
+        <div class="timing-control" id="timing-breath">
+          <div class="timing-control__info">
+            <p class="timing-control__label">Breath</p>
+            <p class="timing-control__hint">Inhale duration</p>
           </div>
-          <!-- Selection indicator placeholder -->
-          <span class="screen__option-check" aria-hidden="true"></span>
-        </div>
+          <div class="timing-control__stepper" role="group" aria-label="Breath duration">
+            <button
+              class="timing-control__btn timing-control__btn--minus"
+              id="btn-breath-minus"
+              type="button"
+              aria-label="Decrease breath duration"
+              data-control="breath"
+              data-action="minus"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
 
-        <div class="screen__option" role="listitem" id="opt-478">
-          <div class="screen__option-icon" aria-hidden="true">◑</div>
-          <div class="screen__option-info">
-            <h3 class="screen__option-title">4-7-8 Breathing</h3>
-            <p class="screen__option-desc">4 · 7 · 8 — inhale, hold, exhale</p>
-          </div>
-          <span class="screen__option-check" aria-hidden="true"></span>
-        </div>
+            <div class="timing-control__value-wrap">
+              <output
+                class="timing-control__value"
+                id="val-breath"
+                aria-live="polite"
+                aria-label="Breath seconds"
+                for="btn-breath-minus btn-breath-plus"
+              >4</output>
+              <span class="timing-control__unit">sec</span>
+            </div>
 
-        <div class="screen__option" role="listitem" id="opt-diaphragm">
-          <div class="screen__option-icon" aria-hidden="true">≈</div>
-          <div class="screen__option-info">
-            <h3 class="screen__option-title">Diaphragmatic</h3>
-            <p class="screen__option-desc">5 · 5 — inhale, exhale</p>
+            <button
+              class="timing-control__btn timing-control__btn--plus"
+              id="btn-breath-plus"
+              type="button"
+              aria-label="Increase breath duration"
+              data-control="breath"
+              data-action="plus"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <line x1="10" y1="4" x2="10" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
           </div>
-          <span class="screen__option-check" aria-hidden="true"></span>
-        </div>
+        </div><!-- /.timing-control#timing-breath -->
+
+        <!-- ── Hold control ── -->
+        <div class="timing-control" id="timing-hold">
+          <div class="timing-control__info">
+            <p class="timing-control__label">Hold</p>
+            <p class="timing-control__hint">Breath retention</p>
+          </div>
+          <div class="timing-control__stepper" role="group" aria-label="Hold duration">
+            <button
+              class="timing-control__btn timing-control__btn--minus"
+              id="btn-hold-minus"
+              type="button"
+              aria-label="Decrease hold duration"
+              data-control="hold"
+              data-action="minus"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
+
+            <div class="timing-control__value-wrap">
+              <output
+                class="timing-control__value"
+                id="val-hold"
+                aria-live="polite"
+                aria-label="Hold seconds"
+                for="btn-hold-minus btn-hold-plus"
+              >7</output>
+              <span class="timing-control__unit">sec</span>
+            </div>
+
+            <button
+              class="timing-control__btn timing-control__btn--plus"
+              id="btn-hold-plus"
+              type="button"
+              aria-label="Increase hold duration"
+              data-control="hold"
+              data-action="plus"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <line x1="10" y1="4" x2="10" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div><!-- /.timing-control#timing-hold -->
+
+        <!-- ── Release control ── -->
+        <div class="timing-control" id="timing-release">
+          <div class="timing-control__info">
+            <p class="timing-control__label">Release</p>
+            <p class="timing-control__hint">Exhale duration</p>
+          </div>
+          <div class="timing-control__stepper" role="group" aria-label="Release duration">
+            <button
+              class="timing-control__btn timing-control__btn--minus"
+              id="btn-release-minus"
+              type="button"
+              aria-label="Decrease release duration"
+              data-control="release"
+              data-action="minus"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
+
+            <div class="timing-control__value-wrap">
+              <output
+                class="timing-control__value"
+                id="val-release"
+                aria-live="polite"
+                aria-label="Release seconds"
+                for="btn-release-minus btn-release-plus"
+              >8</output>
+              <span class="timing-control__unit">sec</span>
+            </div>
+
+            <button
+              class="timing-control__btn timing-control__btn--plus"
+              id="btn-release-plus"
+              type="button"
+              aria-label="Increase release duration"
+              data-control="release"
+              data-action="plus"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <line x1="10" y1="4" x2="10" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div><!-- /.timing-control#timing-release -->
 
       </div><!-- /.screen__body -->
-
-      <!-- Duration placeholder -->
-      <div class="screen__duration-picker" aria-label="Session duration">
-        <p class="screen__label">Session Duration</p>
-        <div class="screen__duration-options">
-          <button class="screen__duration-btn" id="dur-breath-3" type="button">3 min</button>
-          <button class="screen__duration-btn" id="dur-breath-5" type="button">5 min</button>
-          <button class="screen__duration-btn" id="dur-breath-10" type="button">10 min</button>
-        </div>
-      </div>
 
       <!-- Proceed navigation -->
       <div class="screen__actions">

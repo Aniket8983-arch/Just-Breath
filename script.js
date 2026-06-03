@@ -240,16 +240,141 @@ const initHomeButtons = () => {
 };
 
 /* ============================================================
-   6. INIT — run everything once DOM is ready
+   6. BREATHING SETUP STATE & CONTROLS
+   Manages the three timing values (breath / hold / release).
+   Values are stored in breathingSetup.timings and can be read
+   by the Breathing Session screen when it is implemented.
+   ============================================================ */
+
+/**
+ * Application state for the Breathing Setup screen.
+ * Read this object from any future module to get the
+ * user-selected timing values.
+ *
+ * @property {number} timings.breath  — inhale duration (seconds)
+ * @property {number} timings.hold    — breath retention (seconds)
+ * @property {number} timings.release — exhale duration (seconds)
+ */
+const breathingSetup = {
+  timings: {
+    breath:  4,   /* default — matches HTML initial value */
+    hold:    7,   /* default — matches HTML initial value */
+    release: 8,   /* default — matches HTML initial value */
+  },
+
+  /** Constraints */
+  MIN: 1,
+  MAX: 30,
+};
+
+/**
+ * Initialise all timing controls on the Breathing Setup screen.
+ *
+ * Each control row has:
+ *   data-control="breath|hold|release"  — which timing to update
+ *   data-action="plus|minus"            — direction
+ *
+ * The output element id follows the pattern: val-{control}
+ */
+const initBreathingSetup = () => {
+
+  /** Map control keys to their <output> element IDs */
+  const OUTPUT_IDS = {
+    breath:  'val-breath',
+    hold:    'val-hold',
+    release: 'val-release',
+  };
+
+  /**
+   * Update the displayed value for one control and
+   * toggle disabled state on its plus/minus buttons.
+   *
+   * @param {string} key — 'breath' | 'hold' | 'release'
+   */
+  const syncDisplay = (key) => {
+    const val      = breathingSetup.timings[key];
+    const outputEl = $(`#${OUTPUT_IDS[key]}`);
+
+    if (!outputEl) return;
+
+    /* Update text */
+    outputEl.textContent = val;
+
+    /* Brief colour-flash to confirm the change */
+    outputEl.classList.remove('is-bumped');
+    void outputEl.offsetWidth;           /* force reflow to restart transition */
+    outputEl.classList.add('is-bumped');
+    outputEl.addEventListener('transitionend', () => {
+      outputEl.classList.remove('is-bumped');
+    }, { once: true });
+
+    /* Disable minus when at minimum */
+    const minusBtn = $(`#btn-${key}-minus`);
+    if (minusBtn) minusBtn.disabled = (val <= breathingSetup.MIN);
+
+    /* Disable plus when at maximum */
+    const plusBtn = $(`#btn-${key}-plus`);
+    if (plusBtn) plusBtn.disabled = (val >= breathingSetup.MAX);
+  };
+
+  /**
+   * Handle a stepper button click.
+   * Reads data-control and data-action from the button element.
+   *
+   * @param {MouseEvent} e
+   */
+  const handleStepperClick = (e) => {
+    const btn = e.target.closest('[data-control][data-action]');
+    if (!btn) return;
+
+    const key    = btn.dataset.control;   /* 'breath' | 'hold' | 'release' */
+    const action = btn.dataset.action;    /* 'plus' | 'minus' */
+
+    if (!(key in breathingSetup.timings)) return;
+
+    const current = breathingSetup.timings[key];
+
+    if (action === 'plus'  && current < breathingSetup.MAX) {
+      breathingSetup.timings[key] = current + 1;
+    } else if (action === 'minus' && current > breathingSetup.MIN) {
+      breathingSetup.timings[key] = current - 1;
+    }
+
+    syncDisplay(key);
+
+    /* Log current state for debugging */
+    console.log(
+      '%c[Breathing Setup] timings updated →',
+      'color: #C9A84C; font-style: italic;',
+      { ...breathingSetup.timings }
+    );
+  };
+
+  /* ---- Attach one delegated listener to the entire screen ---- */
+  const setupScreen = $('#screen-breathing-setup');
+  if (setupScreen) {
+    setupScreen.addEventListener('click', handleStepperClick);
+  }
+
+  /* ---- Initialise display and button states on load ---- */
+  Object.keys(breathingSetup.timings).forEach(syncDisplay);
+};
+
+/* ============================================================
+   7. INIT — run everything once DOM is ready
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   initScreens();
   initSoundFab();
   initHomeButtons();
+  initBreathingSetup();
 
   console.log(
-    '%c🧘 Just Breath — Screen structure ready.\n   Screens: ' +
-      Object.values(SCREENS).join(' · '),
+    '%c🧘 Just Breath — Breathing Setup controls active.\n' +
+    '   Default timings: breath=' + breathingSetup.timings.breath +
+    's · hold=' + breathingSetup.timings.hold +
+    's · release=' + breathingSetup.timings.release + 's',
     'color: #F5D78E; font-size: 13px; font-weight: 600; padding: 4px 0;'
   );
 });
+
