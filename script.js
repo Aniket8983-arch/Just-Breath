@@ -105,7 +105,6 @@ const initScreens = () => {
   /* ---- Back / End buttons that return to home ---- */
   const backButtonIds = [
     'back-breathing-setup',
-    'back-breathing-session',
     'back-meditation-setup',
     'back-meditation-session',
   ];
@@ -115,6 +114,11 @@ const initScreens = () => {
     if (!btn) return;
     btn.addEventListener('click', goHome);
   });
+
+  const btnEndBreathing = $('#back-breathing-session');
+  if (btnEndBreathing) {
+    btnEndBreathing.addEventListener('click', endBreathingSession);
+  }
 
   /* ---- Completion screen actions ---- */
   const btnCompletionHome = $('#btn-completion-home');
@@ -144,12 +148,24 @@ const initScreens = () => {
     });
   }
 
-  /* ---- Pause buttons — placeholders, no timer yet ---- */
+  /* ---- Pause buttons ---- */
   const btnPauseBreathing = $('#btn-pause-breathing');
   if (btnPauseBreathing) {
     btnPauseBreathing.addEventListener('click', () => {
-      /* TODO: pause breathing timer */
-      console.log('%c[Session] Pause breathing — placeholder', 'color: #C9A84C; font-style: italic;');
+      if (!breathingSession.isActive) return;
+
+      if (breathingSession.isPaused) {
+        breathingSession.isPaused = false;
+        btnPauseBreathing.textContent = 'Pause';
+        breathingSession.intervalId = setInterval(tickBreathing, 1000);
+      } else {
+        breathingSession.isPaused = true;
+        btnPauseBreathing.textContent = 'Resume';
+        if (breathingSession.intervalId) {
+          clearInterval(breathingSession.intervalId);
+          breathingSession.intervalId = null;
+        }
+      }
     });
   }
 
@@ -408,6 +424,10 @@ const initBreathingSetup = () => {
  * @property {number}  timings.hold    — hold duration
  * @property {number}  timings.release — exhale duration
  * @property {boolean} isActive        — true once the session timer is running
+ * @property {string}  currentPhase    — current phase: 'inhale' | 'hold' | 'exhale'
+ * @property {number}  currentCount    — current count for the active phase
+ * @property {number}  intervalId      — standard setInterval token
+ * @property {boolean} isPaused        — pause state
  */
 const breathingSession = {
   timings: {
@@ -416,6 +436,112 @@ const breathingSession = {
     release: 0,
   },
   isActive: false,
+  currentPhase: '',
+  currentCount: 0,
+  intervalId: null,
+  isPaused: false,
+};
+
+/**
+ * Stops the breathing session countdown timer and resets state.
+ */
+const stopBreathingTimer = () => {
+  if (breathingSession.intervalId) {
+    clearInterval(breathingSession.intervalId);
+    breathingSession.intervalId = null;
+  }
+  breathingSession.isActive = false;
+  breathingSession.isPaused = false;
+
+  const pauseBtn = $('#btn-pause-breathing');
+  if (pauseBtn) {
+    pauseBtn.textContent = 'Pause';
+  }
+
+  const visualiser = $('#breathing-visualiser');
+  if (visualiser) {
+    visualiser.style.transform = '';
+    visualiser.style.transition = '';
+  }
+};
+
+/**
+ * End the breathing session and return home.
+ */
+const endBreathingSession = () => {
+  stopBreathingTimer();
+  goHome();
+};
+
+/**
+ * Updates the screen element contents and the circle size.
+ */
+const updateBreathingUI = () => {
+  const phaseTitleEl = $('#breathing-phase-title');
+  const phaseEl = $('#breathing-phase');
+  const countEl = $('#breathing-count');
+  const visualiser = $('#breathing-visualiser');
+
+  const { currentPhase, currentCount, timings } = breathingSession;
+
+  let phaseText = '';
+  if (currentPhase === 'inhale') {
+    phaseText = 'Inhale';
+  } else if (currentPhase === 'hold') {
+    phaseText = 'Hold';
+  } else if (currentPhase === 'exhale') {
+    phaseText = 'Exhale';
+  }
+
+  if (phaseTitleEl) {
+    phaseTitleEl.textContent = phaseText;
+  }
+  if (phaseEl) {
+    phaseEl.textContent = phaseText;
+  }
+  if (countEl) {
+    countEl.textContent = currentCount;
+  }
+
+  if (visualiser) {
+    let scale = 1.0;
+    if (currentPhase === 'inhale') {
+      const duration = timings.breath;
+      const progress = (duration - currentCount) / duration;
+      scale = 1.0 + progress * 0.5;
+    } else if (currentPhase === 'hold') {
+      scale = 1.5;
+    } else if (currentPhase === 'exhale') {
+      const duration = timings.release;
+      const progress = (duration - currentCount) / duration;
+      scale = 1.5 - progress * 0.5;
+    }
+    visualiser.style.transform = `scale(${scale})`;
+  }
+};
+
+/**
+ * Timer tick function called every second.
+ */
+const tickBreathing = () => {
+  if (breathingSession.isPaused) return;
+
+  breathingSession.currentCount--;
+
+  if (breathingSession.currentCount <= 0) {
+    if (breathingSession.currentPhase === 'inhale') {
+      breathingSession.currentPhase = 'hold';
+      breathingSession.currentCount = breathingSession.timings.hold;
+    } else if (breathingSession.currentPhase === 'hold') {
+      breathingSession.currentPhase = 'exhale';
+      breathingSession.currentCount = breathingSession.timings.release;
+    } else if (breathingSession.currentPhase === 'exhale') {
+      breathingSession.currentPhase = 'inhale';
+      breathingSession.currentCount = breathingSession.timings.breath;
+    }
+  }
+
+  updateBreathingUI();
 };
 
 /**
@@ -435,25 +561,31 @@ const startBreathingSession = () => {
   breathingSession.timings.breath  = breath;
   breathingSession.timings.hold    = hold;
   breathingSession.timings.release = release;
-  breathingSession.isActive        = false; /* animation not started yet */
+  breathingSession.isActive        = true;
+  breathingSession.isPaused        = false;
+  breathingSession.currentPhase    = 'inhale';
+  breathingSession.currentCount    = breath;
 
   /* 3. Update Session screen display elements */
   const labelEl = $('#breathing-session-label');  /* nav step span */
-  const phaseEl = $('#breathing-phase');           /* phase text below circle */
-  const countEl = $('#breathing-count');           /* large count inside circle */
+  const visualiser = $('#breathing-visualiser');
 
   if (labelEl) {
     /* Show the locked-in pattern in the nav bar, e.g. "4s · 7s · 8s" */
     labelEl.textContent = `${breath}s \u00b7 ${hold}s \u00b7 ${release}s`;
   }
-  if (phaseEl) {
-    /* Surface the phase order until animation is wired up */
-    phaseEl.textContent = 'Inhale \u00b7 Hold \u00b7 Exhale';
+
+  if (visualiser) {
+    visualiser.style.transition = 'transform 1s linear';
   }
-  if (countEl) {
-    /* Reset count display */
-    countEl.textContent = '\u2013';
+
+  updateBreathingUI();
+
+  // Clear any existing timer just in case
+  if (breathingSession.intervalId) {
+    clearInterval(breathingSession.intervalId);
   }
+  breathingSession.intervalId = setInterval(tickBreathing, 1000);
 
   console.log(
     '%c[Breathing Session] State locked in \u2192',
