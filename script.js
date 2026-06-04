@@ -1026,75 +1026,103 @@ const tickMeditation = () => {
  * Initialise Meditation Setup selectors.
  */
 const initMeditationSetup = () => {
-  // Set defaults in UI
-  const defDurBtn = $('#dur-med-5');
-  if (defDurBtn) defDurBtn.classList.add('is-selected');
-
-  const defOptCard = $('#opt-calm');
-  if (defOptCard) defOptCard.classList.add('is-selected');
-
-  // Handle duration preset clicks
   const durationBtns = document.querySelectorAll('.screen__duration-btn');
+  const valEl = $('#val-meditation-duration');
+  const btnMinus = $('#btn-meditation-duration-minus');
+  const btnPlus = $('#btn-meditation-duration-plus');
+
+  const MIN_DUR = 1;
+  const MAX_DUR = 120;
+
+  const updateUI = () => {
+    // 1. Update display text
+    if (valEl) {
+      valEl.textContent = meditationSetup.duration;
+    }
+
+    // 2. Enable/disable plus/minus buttons based on limits
+    if (btnMinus) {
+      btnMinus.disabled = meditationSetup.duration <= MIN_DUR;
+    }
+    if (btnPlus) {
+      btnPlus.disabled = meditationSetup.duration >= MAX_DUR;
+    }
+
+    // 3. Highlight preset button if it matches the current duration, else remove highlights
+    durationBtns.forEach((btn) => {
+      const minutes = parseInt(btn.id.replace('dur-med-', ''), 10);
+      if (minutes === meditationSetup.duration) {
+        btn.classList.add('is-selected');
+      } else {
+        btn.classList.remove('is-selected');
+      }
+    });
+  };
+
+  // Preset button listeners
   durationBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
-      durationBtns.forEach((b) => b.classList.remove('is-selected'));
-      btn.classList.add('is-selected');
-
-      // Parse minutes from button id (e.g. dur-med-15 -> 15)
       const minutes = parseInt(btn.id.replace('dur-med-', ''), 10);
       meditationSetup.duration = minutes;
+      updateUI();
 
       console.log(
-        '%c[Meditation Setup] duration updated →',
+        '%c[Meditation Setup] duration updated via preset →',
         'color: #C9A84C; font-style: italic;',
         meditationSetup.duration
       );
     });
   });
 
-  // Handle focus card clicks
-  const optionCards = document.querySelectorAll('#screen-meditation-setup .screen__option');
-  optionCards.forEach((card) => {
-    card.addEventListener('click', () => {
-      optionCards.forEach((c) => c.classList.remove('is-selected'));
-      card.classList.add('is-selected');
-
-      if (card.id === 'opt-calm') {
-        meditationSetup.focus = 'calm';
-      } else if (card.id === 'opt-focus') {
-        meditationSetup.focus = 'focus';
-      } else if (card.id === 'opt-sleep') {
-        meditationSetup.focus = 'sleep';
+  // Minus button listener
+  if (btnMinus) {
+    btnMinus.addEventListener('click', () => {
+      if (meditationSetup.duration > MIN_DUR) {
+        meditationSetup.duration--;
+        updateUI();
+        console.log(
+          '%c[Meditation Setup] duration decreased →',
+          'color: #C9A84C; font-style: italic;',
+          meditationSetup.duration
+        );
       }
-
-      console.log(
-        '%c[Meditation Setup] focus updated →',
-        'color: #C9A84C; font-style: italic;',
-        meditationSetup.focus
-      );
     });
-  });
+  }
+
+  // Plus button listener
+  if (btnPlus) {
+    btnPlus.addEventListener('click', () => {
+      if (meditationSetup.duration < MAX_DUR) {
+        meditationSetup.duration++;
+        updateUI();
+        console.log(
+          '%c[Meditation Setup] duration increased →',
+          'color: #C9A84C; font-style: italic;',
+          meditationSetup.duration
+        );
+      }
+    });
+  }
+
+  // Set initial state
+  updateUI();
 };
 
 /**
  * Called when the user clicks "Begin Meditation" on Setup screen.
  */
 const startMeditationSession = () => {
-  const { duration, focus } = meditationSetup;
+  const { duration } = meditationSetup;
 
   meditationSession.duration = duration;
-  meditationSession.focus = focus;
   meditationSession.isActive = true;
   meditationSession.isPaused = false;
   meditationSession.timeLeft = duration * 60;
 
-  // Update session screen label (e.g. "Calm & Relax (15m)")
+  // Update session screen label (e.g. "Meditation (15m)")
   const labelEl = $('#meditation-session-label');
   if (labelEl) {
-    let focusLabel = 'Calm & Relax';
-    if (focus === 'focus') focusLabel = 'Focus & Clarity';
-    if (focus === 'sleep') focusLabel = 'Sleep & Rest';
-    labelEl.textContent = `${focusLabel} (${duration}m)`;
+    labelEl.textContent = `Meditation (${duration}m)`;
   }
 
   // Update guidance text

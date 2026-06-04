@@ -449,52 +449,63 @@
       <!-- Screen header -->
       <header class="screen__header">
         <p class="screen__eyebrow">guided meditation</p>
-        <h2 class="screen__title">Set Your Intention</h2>
-        <p class="screen__subtitle">Personalise your meditation before you begin.</p>
+        <h2 class="screen__title">Set Duration</h2>
+        <p class="screen__subtitle">Choose a preset or customize your session length.</p>
       </header>
 
-      <!-- Meditation type placeholder -->
-      <div class="screen__body">
+      <div class="screen__body" aria-label="Meditation duration selection">
 
-        <p class="screen__label">Focus</p>
-        <div class="screen__option-group" role="list" aria-label="Meditation focus options">
-
-          <div class="screen__option" role="listitem" id="opt-calm">
-            <div class="screen__option-icon" aria-hidden="true">◇</div>
-            <div class="screen__option-info">
-              <h3 class="screen__option-title">Calm &amp; Relax</h3>
-              <p class="screen__option-desc">Release tension and ease into stillness.</p>
-            </div>
-            <span class="screen__option-check" aria-hidden="true"></span>
-          </div>
-
-          <div class="screen__option" role="listitem" id="opt-focus">
-            <div class="screen__option-icon" aria-hidden="true">◈</div>
-            <div class="screen__option-info">
-              <h3 class="screen__option-title">Focus &amp; Clarity</h3>
-              <p class="screen__option-desc">Sharpen attention and clear mental fog.</p>
-            </div>
-            <span class="screen__option-check" aria-hidden="true"></span>
-          </div>
-
-          <div class="screen__option" role="listitem" id="opt-sleep">
-            <div class="screen__option-icon" aria-hidden="true">☽</div>
-            <div class="screen__option-info">
-              <h3 class="screen__option-title">Sleep &amp; Rest</h3>
-              <p class="screen__option-desc">Ease into restful, peaceful sleep.</p>
-            </div>
-            <span class="screen__option-check" aria-hidden="true"></span>
-          </div>
-
-        </div><!-- /.screen__option-group -->
-
-        <!-- Duration placeholder -->
-        <p class="screen__label">Duration</p>
+        <!-- Duration Presets -->
+        <p class="screen__label">Preset Duration</p>
         <div class="screen__duration-options">
           <button class="screen__duration-btn" id="dur-med-5" type="button">5 min</button>
           <button class="screen__duration-btn" id="dur-med-10" type="button">10 min</button>
           <button class="screen__duration-btn" id="dur-med-15" type="button">15 min</button>
           <button class="screen__duration-btn" id="dur-med-20" type="button">20 min</button>
+        </div>
+
+        <!-- Custom Duration Control -->
+        <p class="screen__label" style="margin-top: var(--sp-6);">Custom Duration</p>
+        <div class="timing-control" id="timing-meditation-duration" style="margin-bottom: var(--sp-6);">
+          <div class="timing-control__info">
+            <p class="timing-control__label">Duration</p>
+            <p class="timing-control__hint">Session length</p>
+          </div>
+          <div class="timing-control__stepper" role="group" aria-label="Custom duration">
+            <button
+              class="timing-control__btn timing-control__btn--minus"
+              id="btn-meditation-duration-minus"
+              type="button"
+              aria-label="Decrease meditation duration"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
+
+            <div class="timing-control__value-wrap">
+              <output
+                class="timing-control__value"
+                id="val-meditation-duration"
+                aria-live="polite"
+                aria-label="Meditation minutes"
+                for="btn-meditation-duration-minus btn-meditation-duration-plus"
+              >5</output>
+              <span class="timing-control__unit">min</span>
+            </div>
+
+            <button
+              class="timing-control__btn timing-control__btn--plus"
+              id="btn-meditation-duration-plus"
+              type="button"
+              aria-label="Increase meditation duration"
+            >
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <line x1="10" y1="4" x2="10" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
       </div><!-- /.screen__body -->
