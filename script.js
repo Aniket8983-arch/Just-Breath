@@ -162,16 +162,24 @@ const initScreens = () => {
     btnPauseBreathing.addEventListener('click', () => {
       if (!breathingSession.isActive) return;
 
+      const visualiser = $('#breathing-visualiser');
+
       if (breathingSession.isPaused) {
         breathingSession.isPaused = false;
         btnPauseBreathing.textContent = 'Pause';
         breathingSession.intervalId = setInterval(tickBreathing, 1000);
+        if (visualiser) {
+          visualiser.classList.remove('anim-paused');
+        }
       } else {
         breathingSession.isPaused = true;
         btnPauseBreathing.textContent = 'Resume';
         if (breathingSession.intervalId) {
           clearInterval(breathingSession.intervalId);
           breathingSession.intervalId = null;
+        }
+        if (visualiser) {
+          visualiser.classList.add('anim-paused');
         }
       }
     });
@@ -701,6 +709,7 @@ const breathingSession = {
   intervalId: null,
   isPaused: false,
   startTime: null,
+  lastRenderedPhase: '',
 };
 
 /**
@@ -713,6 +722,7 @@ const stopBreathingTimer = () => {
   }
   breathingSession.isActive = false;
   breathingSession.isPaused = false;
+  breathingSession.lastRenderedPhase = '';
 
   const pauseBtn = $('#btn-pause-breathing');
   if (pauseBtn) {
@@ -722,7 +732,10 @@ const stopBreathingTimer = () => {
   const visualiser = $('#breathing-visualiser');
   if (visualiser) {
     visualiser.style.transform = '';
-    visualiser.style.transition = '';
+    visualiser.style.boxShadow = '';
+    visualiser.classList.remove('anim-inhale', 'anim-hold', 'anim-exhale', 'anim-paused');
+    visualiser.style.removeProperty('--breath-in-duration');
+    visualiser.style.removeProperty('--breath-out-duration');
   }
 };
 
@@ -780,19 +793,22 @@ const updateBreathingUI = () => {
   }
 
   if (visualiser) {
-    let scale = 1.0;
-    if (currentPhase === 'inhale') {
-      const duration = timings.breath;
-      const progress = (duration - currentCount) / duration;
-      scale = 1.0 + progress * 0.5;
-    } else if (currentPhase === 'hold') {
-      scale = 1.5;
-    } else if (currentPhase === 'exhale') {
-      const duration = timings.release;
-      const progress = (duration - currentCount) / duration;
-      scale = 1.5 - progress * 0.5;
+    if (breathingSession.lastRenderedPhase !== currentPhase) {
+      breathingSession.lastRenderedPhase = currentPhase;
+
+      visualiser.classList.remove('anim-inhale', 'anim-hold', 'anim-exhale');
+
+      // Trigger a reflow to reset keyframe animation
+      void visualiser.offsetWidth;
+
+      if (currentPhase === 'inhale') {
+        visualiser.classList.add('anim-inhale');
+      } else if (currentPhase === 'hold') {
+        visualiser.classList.add('anim-hold');
+      } else if (currentPhase === 'exhale') {
+        visualiser.classList.add('anim-exhale');
+      }
     }
-    visualiser.style.transform = `scale(${scale})`;
   }
 };
 
@@ -842,6 +858,7 @@ const startBreathingSession = () => {
   breathingSession.currentPhase    = 'inhale';
   breathingSession.currentCount    = breath;
   breathingSession.startTime       = Date.now();
+  breathingSession.lastRenderedPhase = '';
 
   /* 3. Update Session screen display elements */
   const labelEl = $('#breathing-session-label');  /* nav step span */
@@ -853,7 +870,8 @@ const startBreathingSession = () => {
   }
 
   if (visualiser) {
-    visualiser.style.transition = 'transform 1s linear';
+    visualiser.style.setProperty('--breath-in-duration', `${breath}s`);
+    visualiser.style.setProperty('--breath-out-duration', `${release}s`);
   }
 
   updateBreathingUI();

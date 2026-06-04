@@ -1759,4 +1759,61 @@ em {
   font-style: italic;
 }
 
+/* ============================================================
+   21. BREATHING VISUALISER ANIMATIONS
+   ============================================================ */
+@keyframes breathInhale {
+  from {
+    transform: scale(1.0);
+    box-shadow: 
+      0 0 12px rgba(245, 215, 142, 0.05),
+      0 0 24px rgba(201, 168, 76, 0.02),
+      inset 0 0 6px rgba(245, 215, 142, 0.02);
+  }
+  to {
+    transform: scale(1.5);
+    box-shadow: 
+      0 0 45px rgba(245, 215, 142, 0.4),
+      0 0 90px rgba(201, 168, 76, 0.18),
+      inset 0 0 22px rgba(245, 215, 142, 0.15);
+  }
+}
+
+@keyframes breathExhale {
+  from {
+    transform: scale(1.5);
+    box-shadow: 
+      0 0 45px rgba(245, 215, 142, 0.4),
+      0 0 90px rgba(201, 168, 76, 0.18),
+      inset 0 0 22px rgba(245, 215, 142, 0.15);
+  }
+  to {
+    transform: scale(1.0);
+    box-shadow: 
+      0 0 12px rgba(245, 215, 142, 0.05),
+      0 0 24px rgba(201, 168, 76, 0.02),
+      inset 0 0 6px rgba(245, 215, 142, 0.02);
+  }
+}
+
+.session__visualiser.anim-inhale {
+  animation: breathInhale var(--breath-in-duration, 4s) cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.session__visualiser.anim-hold {
+  transform: scale(1.5);
+  box-shadow: 
+    0 0 45px rgba(245, 215, 142, 0.4),
+    0 0 90px rgba(201, 168, 76, 0.18),
+    inset 0 0 22px rgba(245, 215, 142, 0.15);
+}
+
+.session__visualiser.anim-exhale {
+  animation: breathExhale var(--breath-out-duration, 8s) cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.session__visualiser.anim-paused {
+  animation-play-state: paused !important;
+}
+
 
