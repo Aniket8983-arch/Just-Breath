@@ -205,6 +205,9 @@ const initScreens = () => {
 /**
  * Application state for sound settings.
  */
+/**
+ * Application state for sound settings.
+ */
 const SOUND_SOURCES = {
   rain: 'assets/sounds/rain.mp3',
   ocean: 'assets/sounds/ocean.mp3',
@@ -215,7 +218,8 @@ const SOUND_SOURCES = {
 };
 
 const soundSettings = {
-  currentSound: 'rain', // default selection
+  currentSound: 'rain', // fallback default
+  volume: 0.4,          // default volume
   isPlaying: false,
   audioObjects: {},
 };
@@ -236,55 +240,158 @@ const closeSoundDrawer = () => {
   }
 };
 
+const updateSoundDrawerActiveLabel = (key) => {
+  const currentLabelEl = $('#sound-drawer-current');
+  const fab = $('#sound-fab');
+  if (!currentLabelEl) return;
+
+  let displayName = 'Muted';
+  if (key === 'rain') displayName = 'Rain';
+  if (key === 'ocean') displayName = 'Ocean';
+  if (key === 'forest') displayName = 'Forest';
+  if (key === 'wind') displayName = 'Wind';
+  if (key === 'white-noise') displayName = 'White Noise';
+  if (key === 'temple-bell') displayName = 'Temple Bell';
+
+  currentLabelEl.textContent = `Active: ${displayName}`;
+  if (fab) {
+    fab.title = `Ambient Sound: ${displayName}`;
+  }
+};
+
+const fadeOutAudio = (audio, durationMs = 500) => {
+  return new Promise((resolve) => {
+    if (!audio || audio.paused) {
+      resolve();
+      return;
+    }
+
+    const startVolume = audio.volume;
+    const steps = 10;
+    const intervalMs = durationMs / steps;
+    let currentStep = 0;
+
+    const timer = setInterval(() => {
+      currentStep++;
+      const val = startVolume * (1 - currentStep / steps);
+      audio.volume = Math.max(0, val);
+
+      if (currentStep >= steps) {
+        clearInterval(timer);
+        audio.pause();
+        audio.volume = startVolume; // restore original volume for next time
+        resolve();
+      }
+    }, intervalMs);
+  });
+};
+
+const fadeInAudio = (audio, targetVolume, durationMs = 500) => {
+  return new Promise((resolve) => {
+    if (!audio) {
+      resolve();
+      return;
+    }
+
+    audio.volume = 0;
+    audio.play().then(() => {
+      const steps = 10;
+      const intervalMs = durationMs / steps;
+      let currentStep = 0;
+
+      const timer = setInterval(() => {
+        currentStep++;
+        const val = targetVolume * (currentStep / steps);
+        audio.volume = Math.min(targetVolume, val);
+
+        if (currentStep >= steps) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, intervalMs);
+    }).catch((err) => {
+      console.info('%cAutoplay blocked or file missing, cannot fade in.', 'color: #C9A84C; font-style: italic;');
+      resolve();
+    });
+  });
+};
+
+let currentFadePromise = Promise.resolve();
+
 /**
  * Stop any running sound and play the target sound key.
  *
  * @param {string} key - sound key or 'mute'
+ * @param {boolean} immediate - skip fade out if true
  */
-const playAmbientSound = async (key) => {
-  // 1. Pause any currently playing audio
-  Object.values(soundSettings.audioObjects).forEach((audio) => {
-    if (audio) {
-      audio.pause();
-    }
-  });
+const playAmbientSound = async (key, immediate = false) => {
+  // If key is already active, do nothing
+  if (soundSettings.currentSound === key && soundSettings.isPlaying) {
+    return;
+  }
 
+  // Update localStorage and state
+  localStorage.setItem('ambientSound', key);
+  const oldKey = soundSettings.currentSound;
   soundSettings.currentSound = key;
+
+  // Update active status UI labels
+  updateSoundDrawerActiveLabel(key);
 
   const ambientBar = $('#ambient-bar');
 
+  // Handle immediate mute
   if (key === 'mute') {
+    Object.values(soundSettings.audioObjects).forEach((audio) => {
+      if (audio) audio.pause();
+    });
     soundSettings.isPlaying = false;
     if (ambientBar) ambientBar.classList.add('is-paused');
     return;
   }
 
-  // 2. Lazily create Audio object if it doesn't exist
+  // Lazily create Audio object
   if (!soundSettings.audioObjects[key]) {
     const src = SOUND_SOURCES[key];
     if (src) {
       const audio = new Audio(src);
       audio.loop = true;
-      audio.volume = 0.5;
       soundSettings.audioObjects[key] = audio;
     }
   }
 
-  const currentAudio = soundSettings.audioObjects[key];
-  if (currentAudio) {
-    try {
-      await currentAudio.play();
-      soundSettings.isPlaying = true;
-      if (ambientBar) ambientBar.classList.remove('is-paused');
-    } catch (err) {
-      soundSettings.isPlaying = false;
-      if (ambientBar) ambientBar.classList.add('is-paused');
-      console.info(
-        `%cJust Breath: Ambient sound '${key}' could not be played. (Browser autoplay block or missing file at ${SOUND_SOURCES[key]})`,
-        'color: #C9A84C; font-style: italic;'
-      );
-    }
-  }
+  const oldAudio = soundSettings.audioObjects[oldKey];
+  const newAudio = soundSettings.audioObjects[key];
+
+  currentFadePromise = currentFadePromise
+    .then(async () => {
+      // 1. Fade out old audio if not mute
+      if (oldKey !== 'mute' && oldAudio && !oldAudio.paused) {
+        if (immediate) {
+          oldAudio.pause();
+        } else {
+          await fadeOutAudio(oldAudio, 500);
+        }
+      }
+    })
+    .then(async () => {
+      // 2. Play new audio if user selection is still matching
+      if (soundSettings.currentSound !== key) {
+        return;
+      }
+
+      if (newAudio) {
+        await fadeInAudio(newAudio, soundSettings.volume, 500);
+        soundSettings.isPlaying = !newAudio.paused;
+        if (soundSettings.isPlaying) {
+          if (ambientBar) ambientBar.classList.remove('is-paused');
+        } else {
+          if (ambientBar) ambientBar.classList.add('is-paused');
+        }
+      }
+    });
+
+  await currentFadePromise;
 };
 
 const initSoundDrawer = () => {
@@ -292,15 +399,44 @@ const initSoundDrawer = () => {
   const drawer = $('#sound-drawer');
   const closeBtn = $('#sound-drawer-close');
   const overlay = $('#sound-drawer-overlay');
+  const slider = $('#sound-volume');
 
   if (!fab || !drawer) return;
 
-  // Set default selection in UI
-  const defaultOpt = $('#sound-opt-rain');
-  if (defaultOpt) {
-    defaultOpt.classList.add('is-selected');
-    defaultOpt.setAttribute('aria-checked', 'true');
+  // 1. Restore sound selection and volume from localStorage
+  const savedSound = localStorage.getItem('ambientSound') || 'rain';
+  const savedVolume = localStorage.getItem('ambientVolume');
+  soundSettings.volume = savedVolume !== null ? parseFloat(savedVolume) : 0.4;
+
+  // Sync volume slider
+  if (slider) {
+    slider.value = soundSettings.volume;
+    slider.addEventListener('input', () => {
+      const val = parseFloat(slider.value);
+      soundSettings.volume = val;
+      localStorage.setItem('ambientVolume', val);
+
+      // Instantly adjust volume of playing audio
+      const currentAudio = soundSettings.audioObjects[soundSettings.currentSound];
+      if (currentAudio && !currentAudio.paused) {
+        currentAudio.volume = val;
+      }
+    });
   }
+
+  // Highlight saved selection in UI
+  const options = document.querySelectorAll('.sound-drawer__option');
+  options.forEach((opt) => {
+    if (opt.dataset.sound === savedSound) {
+      opt.classList.add('is-selected');
+      opt.setAttribute('aria-checked', 'true');
+    } else {
+      opt.classList.remove('is-selected');
+      opt.setAttribute('aria-checked', 'false');
+    }
+  });
+
+  updateSoundDrawerActiveLabel(savedSound);
 
   /** Trigger a brief ripple animation on the FAB */
   const triggerRipple = () => {
@@ -329,7 +465,6 @@ const initSoundDrawer = () => {
   }
 
   // Handle option selection
-  const options = document.querySelectorAll('.sound-drawer__option');
   options.forEach((opt) => {
     opt.addEventListener('click', () => {
       options.forEach((o) => {
@@ -340,6 +475,7 @@ const initSoundDrawer = () => {
       opt.setAttribute('aria-checked', 'true');
 
       const soundKey = opt.dataset.sound;
+      // Fade transitions on manual select
       playAmbientSound(soundKey);
 
       console.log(
@@ -357,8 +493,9 @@ const initSoundDrawer = () => {
     }
   });
 
-  // Attempt initial audio playback (gracefully catches block)
-  playAmbientSound('rain');
+  // Attempt initial audio playback of saved sound (gracefully handles autoplay block)
+  // Skip initial fade-in delay (immediate play attempt)
+  playAmbientSound(savedSound, true);
 
   // Resume sound on first user interaction if not muted
   const resumeOnInteraction = () => {
