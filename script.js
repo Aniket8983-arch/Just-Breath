@@ -213,9 +213,6 @@ const initScreens = () => {
 /**
  * Application state for sound settings.
  */
-/**
- * Application state for sound settings.
- */
 const SOUND_SOURCES = {
   rain: 'assets/sounds/rain.mp3',
   ocean: 'assets/sounds/ocean.mp3',
