@@ -1057,11 +1057,28 @@ em {
   gap: var(--sp-3);
 }
 
+/* ---- Session visualiser container (manages containment and sizing bounds) ---- */
+.session__visualiser-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: min(70vh, 80vw);
+  height: min(70vh, 80vw);
+  max-width: 100%;
+  max-height: 100%;
+  margin-inline: auto;
+  flex-shrink: 0;
+  --max-scale: 1.5;
+  /* Padding equals maximum outer ring inset (16px * 1.5 max scale = 24px) to prevent ring clipping */
+  padding: calc(16px * var(--max-scale));
+}
+
 /* ---- Session visualiser (breathing + meditation placeholder) ---- */
 .session__visualiser {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: calc(100% / var(--max-scale));
+  height: calc(100% / var(--max-scale));
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1070,8 +1087,8 @@ em {
 }
 
 .session__visualiser--meditation {
-  width: 180px;
-  height: 180px;
+  width: 70%;
+  height: 70%;
 }
 
 .session__visualiser-ring {
@@ -1264,8 +1281,6 @@ em {
   .screen__header { padding: var(--sp-8) var(--sp-6) var(--sp-5); }
   .screen__body  { padding: var(--sp-5) var(--sp-6); }
   .screen__actions { padding: var(--sp-6); }
-
-  .session__visualiser { width: 240px; height: 240px; }
 }
 
 @media (min-width: 768px) {
@@ -1275,7 +1290,6 @@ em {
   .screen__actions--completion { flex-direction: row; }
 
   .completion__stats { gap: var(--sp-12); }
-  .session__visualiser { width: 280px; height: 280px; }
 }
 
 
@@ -1793,7 +1807,7 @@ em {
       inset 0 0 6px rgba(165, 194, 180, 0.02);
   }
   to {
-    transform: scale(1.5);
+    transform: scale(var(--max-scale, 1.5));
     box-shadow: 
       0 0 45px rgba(165, 194, 180, 0.4),
       0 0 90px rgba(249, 231, 201, 0.18),
@@ -1803,7 +1817,7 @@ em {
 
 @keyframes breathExhale {
   from {
-    transform: scale(1.5);
+    transform: scale(var(--max-scale, 1.5));
     box-shadow: 
       0 0 45px rgba(165, 194, 180, 0.4),
       0 0 90px rgba(249, 231, 201, 0.18),
@@ -1823,7 +1837,7 @@ em {
 }
 
 .session__visualiser.anim-hold {
-  transform: scale(1.5);
+  transform: scale(var(--max-scale, 1.5));
   box-shadow: 
     0 0 45px rgba(165, 194, 180, 0.4),
     0 0 90px rgba(249, 231, 201, 0.18),

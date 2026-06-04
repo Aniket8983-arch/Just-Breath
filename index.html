@@ -392,12 +392,14 @@
 
       <!-- Breath visualiser placeholder -->
       <div class="screen__body screen__body--centered">
-        <div class="session__visualiser" id="breathing-visualiser" aria-hidden="true">
-          <!-- Animated circle will be built here in a future step -->
-          <div class="session__visualiser-ring session__visualiser-ring--outer"></div>
-          <div class="session__visualiser-ring session__visualiser-ring--mid"></div>
-          <div class="session__visualiser-core">
-            <p class="session__count" id="breathing-count" aria-live="polite" aria-label="Count">–</p>
+        <div class="session__visualiser-container">
+          <div class="session__visualiser" id="breathing-visualiser" aria-hidden="true">
+            <!-- Animated circle will be built here in a future step -->
+            <div class="session__visualiser-ring session__visualiser-ring--outer"></div>
+            <div class="session__visualiser-ring session__visualiser-ring--mid"></div>
+            <div class="session__visualiser-core">
+              <p class="session__count" id="breathing-count" aria-live="polite" aria-label="Count">–</p>
+            </div>
           </div>
         </div>
 
@@ -538,16 +540,18 @@
       <div class="screen__body screen__body--centered">
 
         <!-- Ambient visualiser placeholder -->
-        <div class="session__visualiser session__visualiser--meditation" id="meditation-visualiser" aria-hidden="true">
-          <div class="session__visualiser-ring session__visualiser-ring--outer"></div>
-          <div class="session__visualiser-ring session__visualiser-ring--mid"></div>
-          <div class="session__visualiser-core">
-            <!-- Lotus icon carried over from home screen SVG defs -->
-            <svg viewBox="0 0 80 80" fill="none" class="session__visualiser-logo" aria-hidden="true">
-              <path d="M40 20 C25 28 22 46 40 56 C28 48 26 32 40 20Z" fill="url(#petalGrad)" opacity="0.9"/>
-              <path d="M40 20 C55 28 58 46 40 56 C52 48 54 32 40 20Z" fill="url(#petalGrad)" opacity="0.7"/>
-              <ellipse cx="40" cy="56" rx="8" ry="4" fill="url(#petalGrad)" opacity="0.5"/>
-            </svg>
+        <div class="session__visualiser-container">
+          <div class="session__visualiser session__visualiser--meditation" id="meditation-visualiser" aria-hidden="true">
+            <div class="session__visualiser-ring session__visualiser-ring--outer"></div>
+            <div class="session__visualiser-ring session__visualiser-ring--mid"></div>
+            <div class="session__visualiser-core">
+              <!-- Lotus icon carried over from home screen SVG defs -->
+              <svg viewBox="0 0 80 80" fill="none" class="session__visualiser-logo" aria-hidden="true">
+                <path d="M40 20 C25 28 22 46 40 56 C28 48 26 32 40 20Z" fill="url(#petalGrad)" opacity="0.9"/>
+                <path d="M40 20 C55 28 58 46 40 56 C52 48 54 32 40 20Z" fill="url(#petalGrad)" opacity="0.7"/>
+                <ellipse cx="40" cy="56" rx="8" ry="4" fill="url(#petalGrad)" opacity="0.5"/>
+              </svg>
+            </div>
           </div>
         </div>
 
