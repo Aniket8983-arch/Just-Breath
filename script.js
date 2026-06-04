@@ -532,7 +532,7 @@ const initHomeButtons = () => {
     if (circle) {
       circle.style.transform = 'scale(1.18)';
       circle.style.boxShadow =
-        '0 0 60px rgba(165,243,252,0.55), inset 0 0 40px rgba(165,243,252,0.25)';
+        '0 0 60px rgba(249, 231, 201, 0.55), inset 0 0 40px rgba(249, 231, 201, 0.25)';
       setTimeout(() => {
         circle.style.transform = '';
         circle.style.boxShadow = '';
