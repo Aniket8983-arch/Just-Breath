@@ -1641,4 +1641,29 @@ em {
   background: var(--gold-300);
 }
 
+/* ============================================================
+   19. DAILY STREAK BADGE
+   ============================================================ */
+.home__streak-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1.5);
+  padding: var(--sp-1.5) var(--sp-3);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  color: var(--gold-300);
+  font-weight: 500;
+  margin-bottom: var(--sp-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-body);
+}
+
+.home__streak-icon {
+  font-size: var(--text-sm);
+  filter: drop-shadow(0 0 4px rgba(201, 168, 76, 0.4));
+}
+
 

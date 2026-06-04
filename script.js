@@ -937,6 +937,9 @@ const completeMeditationSession = () => {
   if (statDuration) statDuration.textContent = `${duration} min`;
   if (statRounds) statRounds.textContent = '–';
 
+  // Record daily streak completion
+  recordSessionCompletion();
+
   showScreen(SCREENS.COMPLETION);
 };
 
@@ -1087,6 +1090,77 @@ const startMeditationSession = () => {
 };
 
 /* ============================================================
+   7.8 STREAK TRACKING
+   ============================================================ */
+
+const getLocalDateString = (date = new Date()) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+
+const isYesterday = (dateStr) => {
+  if (!dateStr) return false;
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const compDate = new Date(y, m - 1, d);
+  compDate.setHours(0, 0, 0, 0);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  return compDate.getTime() === yesterday.getTime();
+};
+
+const recordSessionCompletion = () => {
+  let streak = parseInt(localStorage.getItem('breathStreak') || '0', 10);
+  const lastDate = localStorage.getItem('breathLastCompletionDate');
+  const today = getLocalDateString();
+
+  if (lastDate === today) {
+    // Already completed today, streak remains unchanged
+    return;
+  }
+
+  if (lastDate && isYesterday(lastDate)) {
+    streak += 1;
+  } else {
+    streak = 1;
+  }
+
+  localStorage.setItem('breathStreak', streak);
+  localStorage.setItem('breathLastCompletionDate', today);
+
+  updateHomeStreakDisplay(streak);
+};
+
+const updateHomeStreakDisplay = (streak) => {
+  const countEl = $('#home-streak-count');
+  if (countEl) {
+    countEl.textContent = streak;
+  }
+};
+
+const checkStreakValidity = () => {
+  let streak = parseInt(localStorage.getItem('breathStreak') || '0', 10);
+  const lastDate = localStorage.getItem('breathLastCompletionDate');
+  const today = getLocalDateString();
+
+  if (streak > 0 && lastDate) {
+    if (lastDate !== today && !isYesterday(lastDate)) {
+      // Missed a day! Reset streak
+      streak = 0;
+      localStorage.setItem('breathStreak', '0');
+    }
+  }
+
+  updateHomeStreakDisplay(streak);
+};
+
+/* ============================================================
    8. INIT — run everything once DOM is ready
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1095,6 +1169,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHomeButtons();
   initBreathingSetup();
   initMeditationSetup();
+  checkStreakValidity();
 
   console.log(
     '%c🧘 Just Breath — Navigation active.\n' +
