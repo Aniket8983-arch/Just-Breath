@@ -22,38 +22,38 @@
    1. CSS CUSTOM PROPERTIES
    ============================================================ */
 :root {
-  /* --- Navy palette --- */
-  --navy-950:  #070908;
-  --navy-900:  #0D110F;
-  --navy-800:  #1A201D;
-  --navy-700:  #2E3833;
-  --navy-600:  #424E48;
+  /* --- Navy/Background palette (Refined luxury darks) --- */
+  --navy-950:  #050505; /* Rich solid black background */
+  --navy-900:  #080808; /* Luxury deep dark base background */
+  --navy-800:  #0D0D0D; /* Panel background */
+  --navy-700:  #161616; /* Muted surface background */
+  --navy-600:  #222222; /* Card border / divider accent */
 
-  /* --- Gold palette --- */
-  --gold-300:  #A5C2B4;
-  --gold-400:  #ECE5D8;
-  --gold-500:  #8EB2A1;
-  --gold-600:  #6F9382;
-  --gold-glow: rgba(249, 231, 201, 0.35);
+  /* --- Gold palette (Soft warm gold and soft yellow tones) --- */
+  --gold-300:  #F7E5C4; /* Soft camomile / yellow gold */
+  --gold-400:  #DFBA73; /* Elegant warm gold accent */
+  --gold-500:  #D0AA62; /* Soft amber gold accent */
+  --gold-600:  #9C7F45; /* Dark bronze/gold */
+  --gold-glow: rgba(223, 186, 115, 0.22); /* Soft warm gold glow */
 
   /* --- Neutral --- */
   --white:          #ffffff;
-  --text-primary:   #FAF8F5;
-  --text-secondary: #CBD5D0;
-  --text-muted:     #7E8B84;
+  --text-primary:   #EAE5DB; /* Muted warm off-white linen */
+  --text-secondary: #BDB6AA; /* Muted warm gold-grey label */
+  --text-muted:     #78736B; /* Soft warm charcoal label */
 
   /* --- Borders & surfaces --- */
-  --border-subtle:  rgba(249, 231, 201, 0.12);
-  --border-gold:    rgba(249, 231, 201, 0.35);
-  --surface-glass:  rgba(255, 255, 255, 0.035);
-  --surface-card:   rgba(26, 32, 29, 0.85);
+  --border-subtle:  rgba(223, 186, 115, 0.08); /* Low contrast subtle gold border */
+  --border-gold:    rgba(223, 186, 115, 0.25); /* Muted elegant gold border */
+  --surface-glass:  rgba(255, 255, 255, 0.015);
+  --surface-card:   rgba(13, 13, 13, 0.95); /* Very dark surfaces */
 
   /* --- Gradients --- */
-  --grad-gold:        linear-gradient(135deg, #A5C2B4 0%, #8EB2A1 60%, #6F9382 100%);
-  --grad-gold-soft:   linear-gradient(135deg, rgba(165, 194, 180,0.15) 0%, rgba(249, 231, 201,0.08) 100%);
-  --grad-navy:        linear-gradient(180deg, #070908 0%, #1A201D 50%, #0D110F 100%);
-  --grad-btn-primary: linear-gradient(135deg, #ECE5D8 0%, #8EB2A1 100%);
-  --grad-btn-hover:   linear-gradient(135deg, #A5C2B4 0%, #ECE5D8 100%);
+  --grad-gold:        linear-gradient(135deg, #F7E5C4 0%, #DFBA73 60%, #9C7F45 100%);
+  --grad-gold-soft:   linear-gradient(135deg, rgba(223, 186, 115, 0.12) 0%, rgba(244, 226, 187, 0.04) 100%);
+  --grad-navy:        linear-gradient(180deg, #050505 0%, #0D0D0D 50%, #080808 100%);
+  --grad-btn-primary: linear-gradient(135deg, #F7E5C4 0%, #DFBA73 100%);
+  --grad-btn-hover:   linear-gradient(135deg, #DFBA73 0%, #F7E5C4 100%);
 
   /* --- Typography --- */
   --font-body:    'Inter', system-ui, sans-serif;
@@ -90,11 +90,11 @@
   --radius-full: 9999px;
 
   /* --- Shadows --- */
-  --shadow-card:    0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px var(--border-subtle);
-  --shadow-btn:     0 6px 24px rgba(249, 231, 201, 0.4);
-  --shadow-btn-hov: 0 10px 40px rgba(249, 231, 201, 0.6);
-  --shadow-glow:    0 0 60px rgba(249, 231, 201, 0.25);
-  --shadow-fab:     0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px var(--border-gold);
+  --shadow-card:    0 24px 80px rgba(0,0,0,0.8), 0 0 0 1px var(--border-subtle);
+  --shadow-btn:     0 6px 20px rgba(223, 186, 115, 0.15);
+  --shadow-btn-hov: 0 10px 30px rgba(223, 186, 115, 0.25);
+  --shadow-glow:    0 0 50px rgba(223, 186, 115, 0.20);
+  --shadow-fab:     0 8px 32px rgba(0,0,0,0.8), 0 0 0 1px var(--border-gold);
 
   /* --- Transitions --- */
   --t-fast: 140ms ease;
@@ -245,7 +245,7 @@ em {
 .bg-orb--1 {
   width: min(500px, 100vw);
   height: min(500px, 100vw);
-  background: radial-gradient(circle, rgba(249, 231, 201, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(223, 186, 115, 0.08) 0%, transparent 70%);
   top: -15%;
   left: -15%;
   animation: orbDrift 18s ease-in-out infinite;
@@ -254,7 +254,7 @@ em {
 .bg-orb--2 {
   width: min(400px, 90vw);
   height: min(400px, 90vw);
-  background: radial-gradient(circle, rgba(100, 80, 200, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(223, 186, 115, 0.06) 0%, transparent 70%);
   bottom: -10%;
   right: -10%;
   animation: orbDrift 22s ease-in-out infinite reverse;
@@ -264,7 +264,7 @@ em {
 .bg-orb--3 {
   width: min(280px, 70vw);
   height: min(280px, 70vw);
-  background: radial-gradient(circle, rgba(249, 231, 201, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(223, 186, 115, 0.04) 0%, transparent 70%);
   top: 55%;
   left: 50%;
   transform: translateX(-50%);
@@ -277,7 +277,7 @@ em {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle, rgba(249, 231, 201,0.07) 1px, transparent 1px);
+    radial-gradient(circle, rgba(223, 186, 115, 0.03) 1px, transparent 1px);
   background-size: 36px 36px;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
@@ -324,14 +324,14 @@ em {
   border-radius: 50%;
   background: radial-gradient(
     circle at 35% 35%,
-    rgba(165, 194, 180, 0.22) 0%,
-    rgba(249, 231, 201, 0.1)  50%,
-    rgba(13, 17, 15, 0.6)    100%
+    rgba(223, 186, 115, 0.22) 0%,
+    rgba(244, 226, 187, 0.1)  50%,
+    rgba(8, 8, 8, 0.8)       100%
   );
   border: 1.5px solid var(--border-gold);
   box-shadow:
-    0 0 0 1px rgba(249, 231, 201,0.08),
-    inset 0 0 30px rgba(249, 231, 201,0.1),
+    0 0 0 1px rgba(223, 186, 115, 0.08),
+    inset 0 0 30px rgba(223, 186, 115, 0.1),
     var(--shadow-glow);
   display: flex;
   align-items: center;
@@ -1108,9 +1108,9 @@ em {
   border: 1.5px solid var(--border-gold);
   background: radial-gradient(
     circle at 35% 35%,
-    rgba(165, 194, 180,0.15) 0%,
-    rgba(249, 231, 201,0.06)  50%,
-    rgba(13, 17, 15,0.5)     100%
+    rgba(223, 186, 115, 0.15) 0%,
+    rgba(244, 226, 187, 0.06)  50%,
+    rgba(8, 8, 8, 0.5)        100%
   );
   display: flex;
   align-items: center;
@@ -1802,16 +1802,16 @@ em {
   from {
     transform: scale(1.0);
     box-shadow: 
-      0 0 12px rgba(165, 194, 180, 0.05),
-      0 0 24px rgba(249, 231, 201, 0.02),
-      inset 0 0 6px rgba(165, 194, 180, 0.02);
+      0 0 12px rgba(223, 186, 115, 0.05),
+      0 0 24px rgba(244, 226, 187, 0.02),
+      inset 0 0 6px rgba(223, 186, 115, 0.02);
   }
   to {
     transform: scale(var(--max-scale, 1.5));
     box-shadow: 
-      0 0 45px rgba(165, 194, 180, 0.4),
-      0 0 90px rgba(249, 231, 201, 0.18),
-      inset 0 0 22px rgba(165, 194, 180, 0.15);
+      0 0 45px rgba(223, 186, 115, 0.4),
+      0 0 90px rgba(244, 226, 187, 0.18),
+      inset 0 0 22px rgba(223, 186, 115, 0.15);
   }
 }
 
@@ -1819,16 +1819,16 @@ em {
   from {
     transform: scale(var(--max-scale, 1.5));
     box-shadow: 
-      0 0 45px rgba(165, 194, 180, 0.4),
-      0 0 90px rgba(249, 231, 201, 0.18),
-      inset 0 0 22px rgba(165, 194, 180, 0.15);
+      0 0 45px rgba(223, 186, 115, 0.4),
+      0 0 90px rgba(244, 226, 187, 0.18),
+      inset 0 0 22px rgba(223, 186, 115, 0.15);
   }
   to {
     transform: scale(1.0);
     box-shadow: 
-      0 0 12px rgba(165, 194, 180, 0.05),
-      0 0 24px rgba(249, 231, 201, 0.02),
-      inset 0 0 6px rgba(165, 194, 180, 0.02);
+      0 0 12px rgba(223, 186, 115, 0.05),
+      0 0 24px rgba(244, 226, 187, 0.02),
+      inset 0 0 6px rgba(223, 186, 115, 0.02);
   }
 }
 
@@ -1839,9 +1839,9 @@ em {
 .session__visualiser.anim-hold {
   transform: scale(var(--max-scale, 1.5));
   box-shadow: 
-    0 0 45px rgba(165, 194, 180, 0.4),
-    0 0 90px rgba(249, 231, 201, 0.18),
-    inset 0 0 22px rgba(165, 194, 180, 0.15);
+    0 0 45px rgba(223, 186, 115, 0.4),
+    0 0 90px rgba(244, 226, 187, 0.18),
+    inset 0 0 22px rgba(223, 186, 115, 0.15);
 }
 
 .session__visualiser.anim-exhale {
