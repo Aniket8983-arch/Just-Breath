@@ -700,6 +700,7 @@ const breathingSession = {
   currentCount: 0,
   intervalId: null,
   isPaused: false,
+  startTime: null,
 };
 
 /**
@@ -729,6 +730,21 @@ const stopBreathingTimer = () => {
  * End the breathing session and return home.
  */
 const endBreathingSession = () => {
+  if (breathingSession.startTime) {
+    const elapsedSeconds = Math.floor((Date.now() - breathingSession.startTime) / 1000);
+    // Log only if it was at least 10 seconds
+    if (elapsedSeconds >= 10) {
+      let durationStr = '';
+      if (elapsedSeconds < 60) {
+        durationStr = `${elapsedSeconds}s`;
+      } else {
+        const mins = Math.floor(elapsedSeconds / 60);
+        const secs = elapsedSeconds % 60;
+        durationStr = secs > 0 ? `${mins}m ${secs}s` : `${mins} min`;
+      }
+      saveSessionToHistory('Breathing', durationStr);
+    }
+  }
   stopBreathingTimer();
   goHome();
 };
@@ -825,6 +841,7 @@ const startBreathingSession = () => {
   breathingSession.isPaused        = false;
   breathingSession.currentPhase    = 'inhale';
   breathingSession.currentCount    = breath;
+  breathingSession.startTime       = Date.now();
 
   /* 3. Update Session screen display elements */
   const labelEl = $('#breathing-session-label');  /* nav step span */
@@ -939,6 +956,9 @@ const completeMeditationSession = () => {
 
   // Record daily streak completion
   recordSessionCompletion();
+
+  // Save session to history
+  saveSessionToHistory('Meditation', `${duration} min`);
 
   showScreen(SCREENS.COMPLETION);
 };
@@ -1160,6 +1180,78 @@ const checkStreakValidity = () => {
   updateHomeStreakDisplay(streak);
 };
 
+/**
+ * Format a calendar date string (YYYY-MM-DD) into a friendly display format.
+ */
+const formatDateForHistory = (dateStr) => {
+  if (!dateStr) return '';
+  const today = getLocalDateString();
+  if (dateStr === today) {
+    return 'Today';
+  }
+  if (isYesterday(dateStr)) {
+    return 'Yesterday';
+  }
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  const monthIdx = parseInt(parts[1], 10) - 1;
+  const day = parseInt(parts[2], 10);
+  
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${months[monthIdx]} ${day}`;
+};
+
+/**
+ * Save a completed session to localStorage.
+ */
+const saveSessionToHistory = (type, duration) => {
+  const history = JSON.parse(localStorage.getItem('breathSessionHistory') || '[]');
+  const today = getLocalDateString();
+  
+  history.unshift({
+    type,
+    duration,
+    date: today
+  });
+  
+  if (history.length > 5) {
+    history.splice(5);
+  }
+  
+  localStorage.setItem('breathSessionHistory', JSON.stringify(history));
+  renderSessionHistory();
+};
+
+/**
+ * Render the session history list on the Home screen.
+ */
+const renderSessionHistory = () => {
+  const listEl = $('#home-history-list');
+  if (!listEl) return;
+  
+  const history = JSON.parse(localStorage.getItem('breathSessionHistory') || '[]');
+  
+  if (history.length === 0) {
+    listEl.innerHTML = '<li class="home__history-empty">No recent activity yet.</li>';
+    return;
+  }
+  
+  listEl.innerHTML = history.map(session => {
+    const icon = session.type === 'Meditation' ? '🧘' : '💨';
+    const formattedDate = formatDateForHistory(session.date);
+    return `
+      <li class="home__history-item">
+        <div class="home__history-icon" aria-hidden="true">${icon}</div>
+        <div class="home__history-details">
+          <span class="home__history-type">${session.type}</span>
+          <span class="home__history-date">${formattedDate}</span>
+        </div>
+        <span class="home__history-duration">${session.duration}</span>
+      </li>
+    `;
+  }).join('');
+};
+
 /* ============================================================
    8. INIT — run everything once DOM is ready
    ============================================================ */
@@ -1170,6 +1262,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initBreathingSetup();
   initMeditationSetup();
   checkStreakValidity();
+  renderSessionHistory();
 
   console.log(
     '%c🧘 Just Breath — Navigation active.\n' +

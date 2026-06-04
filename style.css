@@ -1666,4 +1666,97 @@ em {
   filter: drop-shadow(0 0 4px rgba(201, 168, 76, 0.4));
 }
 
+/* ============================================================
+   20. RECENT ACTIVITY / SESSION HISTORY
+   ============================================================ */
+.home__history {
+  width: 100%;
+  margin-top: var(--sp-2);
+}
+
+.home__history-title {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--sp-3);
+  text-align: left;
+  width: 100%;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: var(--sp-2);
+}
+
+.home__history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  width: 100%;
+}
+
+.home__history-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+
+.home__history-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(201, 168, 76, 0.2);
+}
+
+.home__history-icon {
+  font-size: var(--text-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(201, 168, 76, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--gold-300);
+}
+
+.home__history-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.home__history-type {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: left;
+}
+
+.home__history-date {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  text-align: left;
+}
+
+.home__history-duration {
+  font-size: var(--text-sm);
+  color: var(--gold-300);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.home__history-empty {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-align: center;
+  padding: var(--sp-4) 0;
+  font-style: italic;
+}
+
 
